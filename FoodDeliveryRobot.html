@@ -1,0 +1,1790 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ภารกิจหุ่นยนต์ส่งอาหารตามโต๊ะ — แบบฝึกเทียบเคียง PISA 2025 LDW (ฉบับมัธยมปลาย)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bai+Jamjuree:wght@500;600;700&family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2B1B12;
+    --depth:#7A2A17;
+    --depth-2:#5C1F10;
+    --reef:#C1501F;
+    --seafoam:#F4B942;
+    --seafoam-dark:#D99A1F;
+    --sand:#FBF3E7;
+    --panel:#FFFDF9;
+    --line: rgba(43,27,18,0.12);
+    --coral:#C1501F;
+    --coral-dark:#8B3712;
+    --gold:#E3B23C;
+    --danger:#D6472C;
+    --battery:#3F9C88;
+    --battery-low:#D6472C;
+    --shadow: 0 10px 28px rgba(43,27,18,0.10);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--sand);
+    color:var(--ink);
+    font-family:'Sarabun', sans-serif;
+    line-height:1.55;
+    min-height:100vh;
+  }
+  h1,h2,h3,.head-font{
+    font-family:'Bai Jamjuree', 'Sarabun', sans-serif;
+    letter-spacing:0.01em;
+  }
+  button{font-family:inherit; cursor:pointer;}
+  .hidden{display:none !important;}
+
+  /* ===== Header ===== */
+  header.app-header{
+    background:linear-gradient(180deg, var(--depth) 0%, var(--depth-2) 100%);
+    color:#FBEFE6;
+    padding:12px 22px;
+    position:sticky; top:0; z-index:50;
+    box-shadow:0 4px 18px rgba(0,0,0,0.18);
+  }
+  .header-row{
+    max-width:1220px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:center; gap:10px;}
+  .brand .mark{
+    width:34px; height:34px; border-radius:9px;
+    background:var(--seafoam); color:var(--depth); padding:6px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bai Jamjuree',sans-serif; font-weight:700; font-size:15px;
+  }
+  .brand .mark svg{width:100%; height:100%;}
+  .brand-text .title{font-weight:700; font-size:15.5px; color:#fff;}
+  .brand-text .sub{font-size:11px; color:#F0D3B8;}
+  .header-mid{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+  .who-badge{
+    display:flex; align-items:center; gap:8px; background:rgba(255,255,255,0.07);
+    border:1px solid rgba(255,255,255,0.12); border-radius:10px; padding:6px 12px;
+    font-size:12.5px; color:#F5E3D2;
+  }
+  .who-badge b{color:#fff;}
+  .stepper{display:flex; gap:5px; align-items:center; flex-wrap:wrap;}
+  .step{
+    display:flex; align-items:center; gap:6px;
+    padding:6px 11px 6px 7px; border-radius:999px;
+    background:rgba(255,255,255,0.06); color:#D9B79C; font-size:12.5px; font-weight:600;
+    border:1px solid rgba(255,255,255,0.08);
+  }
+  .step .num{
+    width:19px;height:19px;border-radius:50%;
+    background:rgba(255,255,255,0.12); color:#F3DCC5;
+    display:flex;align-items:center;justify-content:center; font-size:11px;
+  }
+  .step.active{background:var(--seafoam); color:var(--depth); border-color:var(--seafoam);}
+  .step.active .num{background:var(--depth); color:var(--seafoam);}
+  .step.done{color:#FBEFE6;}
+  .step.done .num{background:var(--seafoam-dark); color:#fff;}
+  .timer-box{
+    font-family:'Bai Jamjuree',sans-serif; font-weight:600; font-size:14.5px;
+    background:rgba(255,255,255,0.08); padding:7px 13px; border-radius:10px;
+    color:#FBEFE6; border:1px solid rgba(255,255,255,0.1); min-width:88px; text-align:center;
+  }
+  .timer-box.low{background:rgba(255,122,89,0.18); color:#FFCEBF; border-color:rgba(255,122,89,0.4);}
+
+  /* ===== Layout ===== */
+  main{max-width:1220px; margin:0 auto; padding:26px 20px 80px;}
+  .card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px;
+    box-shadow:var(--shadow); padding:24px;
+  }
+  .two-col{display:grid; grid-template-columns: 1fr 1fr; gap:22px; align-items:start;}
+  @media (max-width:880px){ .two-col{grid-template-columns:1fr;} }
+
+  .eyebrow-phase{font-size:12.5px; color:var(--reef); font-weight:700; display:flex; align-items:center; gap:7px;}
+  .eyebrow-phase svg{flex:none; width:16px; height:16px;}
+  .phase-title{font-size:23px; margin:4px 0 10px; color:var(--depth);}
+  .lede{color:#5A4536; font-size:15px; max-width:66ch;}
+
+  /* ===== Intro / Gate ===== */
+  .intro-hero{
+    background:radial-gradient(1100px 400px at 15% -10%, rgba(244,185,66,0.22), transparent),
+               linear-gradient(160deg, var(--depth) 0%, #431707 100%);
+    color:#FBEFE6; border-radius:16px; padding:36px 32px; position:relative; overflow:hidden;
+    display:grid; grid-template-columns: 1.15fr 0.85fr; gap:26px; align-items:center;
+  }
+  @media (max-width:820px){ .intro-hero{grid-template-columns:1fr;} .hero-art{order:-1; max-width:260px; margin:0 auto;} }
+  .intro-hero h1{font-size:29px; max-width:19ch; margin:0 0 10px; line-height:1.28;}
+  .intro-hero p{color:#EAD2BC; max-width:56ch; font-size:15px;}
+  .intro-badges{display:flex; gap:9px; flex-wrap:wrap; margin:18px 0 4px;}
+  .badge{
+    background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15);
+    padding:7px 12px; border-radius:10px; font-size:12.5px; color:#F5E3D2;
+  }
+  .hero-art{position:relative;}
+  .hero-art svg{width:100%; height:auto; display:block;}
+
+  .gate-form{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:6px;}
+  @media (max-width:560px){ .gate-form{grid-template-columns:1fr;} }
+  .field-label{font-size:12.5px; font-weight:700; color:#7A6250; margin-bottom:6px; display:block;}
+  .field-input{
+    width:100%; border:1.5px solid var(--line); border-radius:10px; padding:11px 13px;
+    font-family:'Sarabun',sans-serif; font-size:14.5px; background:#fff; color:var(--ink);
+  }
+  .field-input:focus{outline:none; border-color:var(--reef);}
+  select.field-input{appearance:none; background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="%237A6250" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>'); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px;}
+  .gate-error{color:var(--danger); font-size:13px; font-weight:600; margin-top:10px; display:none;}
+
+  .cta{
+    background:var(--seafoam); color:var(--depth); border:none; font-weight:700;
+    font-family:'Bai Jamjuree',sans-serif; font-size:15px; padding:13px 26px; border-radius:10px;
+    transition: transform .15s ease, background .15s ease;
+  }
+  .cta:hover{background:#F7C868; transform:translateY(-1px);}
+  .cta[disabled]{opacity:.5; cursor:not-allowed; transform:none;}
+  .ghost-btn{
+    background:transparent; border:1.5px solid var(--line); color:var(--ink);
+    font-weight:600; font-size:14px; padding:10px 18px; border-radius:9px;
+  }
+  .ghost-btn:hover{border-color:var(--reef); color:var(--reef);}
+  .ghost-btn[disabled]{opacity:.4; cursor:not-allowed;}
+  .ghost-btn.reset-btn{border-color:rgba(214,71,44,0.4); color:var(--danger);}
+  .ghost-btn.reset-btn:hover{border-color:var(--danger); background:rgba(214,71,44,0.06);}
+
+  /* ===== Questions (Show / Reflect) ===== */
+  .q-block{border-top:1px solid var(--line); padding:18px 0;}
+  .q-block:first-of-type{border-top:none; padding-top:6px;}
+  .q-text{font-weight:600; margin-bottom:10px; font-size:15px;}
+  .opt-list{display:flex; flex-direction:column; gap:8px;}
+  .opt{
+    display:flex; align-items:center; gap:10px; padding:11px 13px; border-radius:9px;
+    border:1.5px solid var(--line); font-size:14.5px; transition:.12s;
+  }
+  .opt:hover{border-color:var(--seafoam-dark); background:rgba(244,185,66,0.08);}
+  .opt.selected{border-color:var(--reef); background:rgba(193,80,31,0.08);}
+  .opt input{accent-color:var(--reef);}
+  .likert-row{display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:13.5px;}
+  .likert-scale{display:flex; gap:14px;}
+  .likert-scale label{display:flex; flex-direction:column; align-items:center; gap:5px; font-size:11.5px; color:#7A6250;}
+  .likert-scale input{accent-color:var(--reef); width:17px; height:17px;}
+
+  textarea.reflect-box{
+    width:100%; border:1.5px solid var(--line); border-radius:10px; padding:12px 14px;
+    font-family:'Sarabun',sans-serif; font-size:14.5px; min-height:90px; resize:vertical;
+  }
+  textarea.reflect-box:focus{outline:none; border-color:var(--reef);}
+
+  /* ===== Mission / grid panel ===== */
+  .mission-panel{display:flex; flex-direction:column; gap:14px;}
+  .grid-wrap{
+    background:linear-gradient(180deg, #4A2E1D, #331E12);
+    border-radius:14px; padding:16px; display:flex; justify-content:center;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
+  }
+  .grid{
+    position:relative; display:grid;
+    background:#2B1B12; border-radius:8px; overflow:hidden;
+  }
+  .cell{
+    border:1px solid rgba(255,255,255,0.05); position:relative;
+    background:repeating-linear-gradient(45deg, rgba(255,255,255,0.02) 0 8px, transparent 8px 16px);
+  }
+  .cell > svg{position:absolute; inset:0; width:100%; height:100%; padding:8px; display:block;}
+  .cell.dock > svg{padding:12px;}
+  .cell.coral{background:var(--coral); box-shadow: inset 0 0 0 2px var(--coral-dark);}
+  .cell.dock{background:rgba(227,178,60,0.18); box-shadow: inset 0 0 0 2px rgba(227,178,60,0.55);}
+  .token{
+    position:absolute; display:flex; align-items:center; justify-content:center;
+    pointer-events:none; transition: left .3s ease, top .3s ease, transform .3s ease, opacity .25s ease;
+  }
+  .plastic-token{font-size:22px;}
+  .robot-token{font-size:26px; filter:drop-shadow(0 2px 3px rgba(0,0,0,0.4));}
+  .dock-label{position:absolute; font-size:10px; color:#7A5C1B; font-weight:700; background:rgba(255,255,255,0.75); padding:1px 5px; border-radius:5px;}
+
+  /* ===== Scratch-style block editor ===== */
+  .sb-wrap{display:grid; grid-template-columns:172px 1fr; gap:10px; align-items:start;}
+  @media (max-width:620px){ .sb-wrap{grid-template-columns:1fr;} }
+
+  .sb-palette{
+    background:#F5EEE2; border:1px solid var(--line); border-radius:12px;
+    padding:10px; display:flex; flex-direction:column; gap:7px; transition:.15s;
+  }
+  .sb-palette.trash{background:rgba(214,71,44,.08); border:1.5px dashed var(--danger);}
+  .sb-palette .sb-row{flex-wrap:wrap; font-size:12px; padding:8px 10px;}
+  .sb-palette .sb-block{max-width:100%;}
+  .sb-cat{font-size:10.5px; font-weight:700; color:#8B7460; letter-spacing:.04em; margin:4px 0 0;}
+  .sb-trash-msg{display:none; font-size:11.5px; font-weight:700; color:var(--danger); text-align:center; padding:6px 0;}
+  .sb-palette.trash .sb-trash-msg{display:block;}
+
+  .sb-canvas{
+    background:radial-gradient(circle, rgba(43,27,18,.10) 1.1px, transparent 1.3px) 0 0/17px 17px, #FFFDFA;
+    border:1.5px solid var(--line); border-radius:12px; padding:12px; min-height:215px; position:relative;
+  }
+  .sb-hat{
+    background:#FFBF00; color:#6B4B00; font-weight:700; font-size:12.5px;
+    padding:11px 15px 9px; border-radius:15px 15px 5px 5px; width:max-content; max-width:100%;
+    box-shadow:0 2px 0 rgba(0,0,0,.16); position:relative; margin-bottom:3px;
+  }
+  .sb-hat::after{content:''; position:absolute; left:15px; bottom:-4px; width:17px; height:5px; background:#FFBF00; border-radius:0 0 4px 4px;}
+
+  .sb-list{min-height:14px;}
+  .sb-list.sb-inner{min-height:36px; padding:5px 0 5px 9px; border-left:14px solid var(--bc);}
+  .sb-empty{font-size:11.5px; color:#B49A80; padding:7px 3px;}
+
+  .sb-block{
+    --bc:#4C97FF; position:relative; width:max-content; max-width:100%;
+    margin:0 0 3px; border-radius:6px; color:#fff; font-size:13px; font-weight:600; line-height:1.3;
+    user-select:none; touch-action:none; cursor:grab;
+  }
+  .sb-block:active{cursor:grabbing;}
+  .sb-block.sb-simple{background:var(--bc); box-shadow:0 2px 0 rgba(0,0,0,.16);}
+  .sb-block.sb-simple::after{content:''; position:absolute; left:15px; bottom:-4px; width:17px; height:5px; background:var(--bc); border-radius:0 0 4px 4px;}
+  .sb-row{display:flex; align-items:center; gap:7px; padding:9px 12px;}
+  .sb-row svg{flex:none;}
+  .sb-motion{--bc:#4C97FF;}
+  .sb-control{--bc:#FFAB19;}
+  .sb-sensing{--bc:#5CB1D6;}
+
+  .sb-c-head{background:var(--bc); border-radius:6px 6px 5px 0; flex-wrap:wrap; box-shadow:0 2px 0 rgba(0,0,0,.10);}
+  .sb-c-foot{background:var(--bc); height:15px; min-width:86px; border-radius:0 0 6px 6px; position:relative; box-shadow:0 2px 0 rgba(0,0,0,.16);}
+  .sb-c-foot::after{content:''; position:absolute; left:15px; bottom:-4px; width:17px; height:5px; background:var(--bc); border-radius:0 0 4px 4px;}
+
+  .sb-num{width:48px; border:none; border-radius:999px; padding:3px 7px; text-align:center; font:600 12.5px 'Sarabun',sans-serif; color:#2B1B12;}
+  .sb-sel{border:none; border-radius:999px; padding:3px 8px; max-width:200px; font:600 12px 'Sarabun',sans-serif; color:#2B1B12;}
+  .sb-del{
+    border:none; background:rgba(0,0,0,.2); color:#fff; width:18px; height:18px; border-radius:50%;
+    font-size:12px; line-height:1; margin-left:3px; display:none; align-items:center; justify-content:center;
+  }
+  .sb-block:hover > .sb-row > .sb-del, .sb-block:hover > .sb-c-head > .sb-del{display:flex;}
+
+  .sb-drop{height:7px; border-radius:4px; background:#FFD86B; box-shadow:0 0 0 2px rgba(255,171,25,.4); margin:3px 0;}
+  .sb-ghost{position:fixed; z-index:9999; pointer-events:none; opacity:.92; transform:rotate(-2deg); filter:drop-shadow(0 10px 16px rgba(0,0,0,.28));}
+  .sb-running{outline:3px solid #FFD86B; outline-offset:2px; border-radius:8px;}
+
+  .run-row{display:flex; flex-wrap:wrap; gap:10px; align-items:center;}
+  .run-btn{
+    background:var(--coral); color:#fff; border:none; font-weight:700; font-family:'Bai Jamjuree',sans-serif;
+    padding:11px 22px; border-radius:9px; font-size:14.5px; display:inline-flex; align-items:center; gap:7px;
+  }
+  .run-btn:hover{background:var(--coral-dark);}
+  .run-btn[disabled]{opacity:.5; cursor:not-allowed;}
+  .stat-line{font-size:13px; color:#6E5643;}
+
+  .feedback{border-radius:10px; padding:12px 14px; font-size:14px; font-weight:600; display:flex; gap:8px; align-items:flex-start;}
+  .feedback.ok{background:rgba(63,156,136,0.16); color:#1F5F52; border:1px solid rgba(63,156,136,0.4);}
+  .feedback.bad{background:rgba(255,122,89,0.14); color:#A63A22; border:1px solid rgba(255,122,89,0.4);}
+  .feedback.info{background:rgba(193,80,31,0.08); color:var(--reef); border:1px solid rgba(193,80,31,0.25);}
+
+  .hint-box{background:#FFF8E9; border:1px solid rgba(227,178,60,0.5); border-radius:10px; padding:12px 14px; font-size:13.5px; color:#6E4E12; margin-top:10px;}
+  .concept-box{background:rgba(193,80,31,0.06); border:1px solid rgba(193,80,31,0.2); border-radius:10px; padding:12px 14px; font-size:13.5px; color:#6E3410; margin:12px 0;}
+  .concept-box b{color:var(--reef);}
+
+  .nav-row{display:flex; justify-content:space-between; align-items:center; margin-top:22px; gap:10px; flex-wrap:wrap;}
+
+  .task-tabs{display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;}
+  .task-tab{
+    font-size:12px; font-weight:700; padding:6px 11px; border-radius:999px;
+    border:1.5px solid var(--line); color:#83705F;
+  }
+  .task-tab.current{border-color:var(--reef); color:var(--reef); background:rgba(193,80,31,0.07);}
+  .task-tab.completed{border-color:var(--seafoam-dark); color:#8A6415; background:rgba(244,185,66,0.15);}
+
+  table.summary{width:100%; border-collapse:collapse; font-size:13.5px;}
+  table.summary th, table.summary td{border-bottom:1px solid var(--line); padding:9px 8px; text-align:left;}
+  table.summary th{color:#6E5643; font-weight:700; font-size:12.5px;}
+  .pill{padding:3px 9px; border-radius:999px; font-size:11.5px; font-weight:700; white-space:nowrap;}
+  .pill.yes{background:rgba(63,156,136,0.2); color:#1F5F52;}
+  .pill.no{background:rgba(255,122,89,0.16); color:#A63A22;}
+
+  .disclaimer{font-size:12px; color:#83705F; border-top:1px solid var(--line); margin-top:16px; padding-top:12px;}
+  footer.notice{max-width:1220px; margin:0 auto; padding:0 20px 40px; font-size:12px; color:#83705F;}
+
+  /* ===== Slider (energy budget) ===== */
+  .slider-row{display:flex; align-items:center; gap:12px; margin:10px 0;}
+  .slider-row input[type=range]{flex:1; accent-color:var(--reef);}
+  .slider-val{font-family:'Bai Jamjuree',sans-serif; font-weight:700; font-size:15px; color:var(--reef); min-width:64px; text-align:right;}
+  .energy-readout{display:flex; align-items:center; gap:8px; font-size:13px; color:#6E5643; margin-top:4px;}
+  .energy-dot{width:10px;height:10px;border-radius:50%; background:var(--battery);}
+  .energy-dot.low{background:var(--battery-low);}
+
+  /* ===== Charts ===== */
+  .chart-card{border:1px solid var(--line); border-radius:12px; padding:14px; background:#fff; margin-top:12px;}
+  .chart-card h4{margin:0 0 8px; font-size:13.5px; color:var(--depth); font-family:'Bai Jamjuree',sans-serif;}
+  .chart-legend{display:flex; gap:14px; font-size:11.5px; color:#83705F; margin-top:6px; flex-wrap:wrap;}
+  .chart-legend span{display:flex; align-items:center; gap:5px;}
+  .legend-swatch{width:10px; height:10px; border-radius:3px; display:inline-block;}
+
+  /* ===== Quality badge (summary) ===== */
+  .quality-badge{
+    display:inline-flex; align-items:center; gap:10px; padding:14px 20px; border-radius:14px;
+    font-family:'Bai Jamjuree',sans-serif; font-weight:700; font-size:20px; margin:10px 0 6px;
+  }
+  .quality-badge.q4{background:rgba(63,156,136,0.18); color:#1F5F52; border:1.5px solid rgba(63,156,136,0.5);}
+  .quality-badge.q3{background:rgba(193,80,31,0.12); color:var(--reef); border:1.5px solid rgba(193,80,31,0.35);}
+  .quality-badge.q2{background:rgba(227,178,60,0.18); color:#8A6415; border:1.5px solid rgba(227,178,60,0.5);}
+  .quality-badge.q1{background:rgba(255,122,89,0.16); color:#A63A22; border:1.5px solid rgba(255,122,89,0.4);}
+  .score-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:14px 0;}
+  @media (max-width:760px){ .score-grid{grid-template-columns:repeat(2,1fr);} }
+  .score-tile{border:1px solid var(--line); border-radius:12px; padding:12px 14px; background:#fff;}
+  .score-tile .k{font-size:11.5px; color:#83705F; font-weight:700;}
+  .score-tile .v{font-family:'Bai Jamjuree',sans-serif; font-size:22px; color:var(--depth); font-weight:700;}
+  .sub-section{margin-top:26px; padding-top:18px; border-top:1px solid var(--line);}
+  .sub-section h3{font-size:16px; color:var(--depth); margin:0 0 10px;}
+  .save-status{font-size:12.5px; color:#83705F; margin-top:14px; display:flex; align-items:center; gap:7px;}
+  .save-status.ok{color:#1F5F52;}
+  .save-status.err{color:#A63A22;}
+  .spinner{width:12px;height:12px;border-radius:50%; border:2px solid var(--line); border-top-color:var(--reef); animation:spin .7s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <div class="header-row">
+    <div class="brand">
+      <div class="mark">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="10" width="16" height="9" rx="2.4" fill="#7A2A17"/>
+          <circle cx="8.6" cy="14.5" r="1.5" fill="#FBEFE6"/>
+          <circle cx="15.4" cy="14.5" r="1.5" fill="#FBEFE6"/>
+          <rect x="7" y="4.5" width="10" height="4.2" rx="1.2" fill="#FBEFE6"/>
+          <ellipse cx="12" cy="4.3" rx="5.4" ry="1.3" fill="#FBEFE6"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <div class="title">ภารกิจหุ่นยนต์ส่งอาหารตามโต๊ะ</div>
+        <div class="sub">แบบฝึกเทียบเคียง PISA 2025 · Learning in the Digital World</div>
+      </div>
+    </div>
+    <div class="header-mid">
+      <div class="who-badge hidden" id="whoBadge"></div>
+      <div class="stepper" id="stepper"></div>
+    </div>
+    <div class="timer-box" id="timerBox">30:00</div>
+  </div>
+</header>
+<svg class="wave-divider" viewBox="0 0 1200 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:34px;margin-top:-2px;">
+  <path d="M0 8 Q150 22 300 8 T600 8 T900 8 T1200 8 V24 H0 Z" fill="#FBF3E7"></path>
+</svg>
+
+<main id="app-main"></main>
+
+<footer class="notice">
+  เครื่องมือนี้เป็นแบบฝึกที่ออกแบบเทียบเคียงลักษณะโครงสร้างข้อสอบ LDW ของ PISA 2025 (4 ขั้นตอน Show–Learn–Apply–Reflect, การสั่งงานตัวแทนดิจิทัลด้วยเครื่องมือเชิงคำนวณ, การเก็บและวิเคราะห์ข้อมูลจำลอง) เพื่อการฝึกฝนเท่านั้น ไม่ใช่ข้อสอบจริงและไม่ใช่คะแนนที่ใช้เทียบเคียงผลสอบจริงของ OECD
+</footer>
+
+<script>
+/* ====================== CONFIG ====================== */
+const SHEET_WEBAPP_URL = 'https://script.google.com/macros/s/AKfycby-EQrWXlKE8-zo7JK1DAwytJ5F5Jb8NtbHfo1OmoNwnzVnsWYiFOhtNKM0x_xGEmCg/exec';
+const SHEET_ID = '1OKDPtv0m34GGKHnnQfK8lhTctgvNX-2vH21Z1wJxNeE';
+const SHEET_NAME = 'Sheet17';
+const GRADE_LEVELS = ['ชั้นมัธยมศึกษาปีที่ 2','ชั้นมัธยมศึกษาปีที่ 3','ชั้นมัธยมศึกษาปีที่ 4','ปวช.'];
+
+/* ====================== GEOMETRY ====================== */
+const DIRS = [ {dx:0,dy:-1}, {dx:1,dy:0}, {dx:0,dy:1}, {dx:-1,dy:0} ]; // up, right, down, left
+const DIR_DEG = [0,90,180,270];
+const CELL = 50;
+
+/* ====================== ICONS (inline SVG) ====================== */
+const ICONS = {
+  show:`<svg viewBox="0 0 24 24" fill="none"><path d="M2 12s3.6-6.5 10-6.5S22 12 22 12s-3.6 6.5-10 6.5S2 12 2 12Z" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="12" r="2.6" fill="currentColor"/></svg>`,
+  learn:`<svg viewBox="0 0 24 24" fill="none"><path d="M4 5.2c2.4-1 5.4-1 8 0v13.6c-2.6-1-5.6-1-8 0V5.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M20 5.2c-2.4-1-5.4-1-8 0v13.6c2.6-1 5.6-1 8 0V5.2Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg>`,
+  apply:`<svg viewBox="0 0 24 24" fill="none"><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3M6 6l2.1 2.1M15.9 15.9L18 18M18 6l-2.1 2.1M8.1 15.9L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="12" cy="12" r="3.6" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  reflect:`<svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3.5" width="14" height="17" rx="2" stroke="currentColor" stroke-width="1.6"/><path d="M8.5 3.5v17" stroke="currentColor" stroke-width="1.6"/></svg>`,
+  summary:`<svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9M11 19V5M18 19v-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  robot:`<svg viewBox="0 0 48 48"><ellipse cx="24" cy="15" rx="11" ry="2.6" fill="#F4B942" stroke="#7A2A17" stroke-width="1.3"/><path d="M13 15c0-6 5-10 11-10s11 4 11 10" fill="#FFFDF9" stroke="#7A2A17" stroke-width="1.5"/><circle cx="24" cy="5.2" r="1.7" fill="#7A2A17"/><rect x="10.5" y="18" width="27" height="19" rx="7" fill="#F3E6D8" stroke="#7A2A17" stroke-width="1.7"/><rect x="15.5" y="23" width="17" height="9" rx="3.4" fill="#2B1B12"/><circle cx="21" cy="27.5" r="1.9" fill="#F4B942"/><circle cx="27" cy="27.5" r="1.9" fill="#F4B942"/><rect x="4.5" y="30" width="7" height="10.5" rx="2.6" fill="#2B1B12"/><rect x="36.5" y="30" width="7" height="10.5" rx="2.6" fill="#2B1B12"/></svg>`,
+  plastic:`<svg viewBox="0 0 32 32"><ellipse cx="16" cy="24.5" rx="11" ry="2.6" fill="#C1501F" opacity="0.16"/><ellipse cx="16" cy="21" rx="11" ry="2.8" fill="#F4B942" stroke="#7A2A17" stroke-width="1.3"/><path d="M6 21c0-6.2 4.5-10.4 10-10.4s10 4.2 10 10.4" fill="#FFFDF9" stroke="#7A2A17" stroke-width="1.5"/><circle cx="16" cy="9.4" r="1.6" fill="#7A2A17"/></svg>`,
+  coral:`<svg viewBox="0 0 40 40"><rect x="10" y="3.5" width="20" height="16" rx="4.5" fill="#FBEFE6"/><rect x="6.5" y="19.5" width="27" height="8.5" rx="3" fill="#FBEFE6"/><rect x="8.5" y="28" width="4.6" height="9.5" rx="1.8" fill="#FBEFE6"/><rect x="26.9" y="28" width="4.6" height="9.5" rx="1.8" fill="#FBEFE6"/></svg>`,
+  dock:`<svg viewBox="0 0 32 32"><ellipse cx="16" cy="25.5" rx="10.5" ry="2.4" fill="#8A6415" opacity="0.22"/><path d="M7 19c0-6.3 3.8-10.6 9-10.6s9 4.3 9 10.6" fill="#F4B942" stroke="#7A2A17" stroke-width="1.5"/><rect x="5.5" y="19" width="21" height="3.4" rx="1.5" fill="#8A6415"/><circle cx="16" cy="6.2" r="1.7" fill="#7A2A17"/></svg>`
+};
+function iconTag(name){ return `<span style="display:inline-flex;">${ICONS[name]}</span>`; }
+
+/* ====================== QUEST DATA ====================== */
+const QUESTS = {
+  learn1:{
+    key:'learn1', label:'ภาระงานที่ 1', title:'ส่งถาดอาหารถาดแรก',
+    concept:'<b>แนวคิด: ลำดับคำสั่ง (Sequence)</b> — โปรแกรมคอมพิวเตอร์คือชุดคำสั่งที่ทำงานเรียงกันไปทีละขั้น ตัวแทนดิจิทัล (หุ่นยนต์เสิร์ฟ) จะทำตามคำสั่งตามลำดับที่คุณวางไว้เป๊ะ ๆ ไม่ขาดไม่เกิน',
+    intro:'ลากบล็อก “เดินหน้า” จากกล่องด้านซ้ายมาต่อใต้หมวก “เมื่อกดปุ่มรันคำสั่ง” เพื่อพาหุ่นยนต์เสิร์ฟจากช่องรับอาหารในครัวไปหยิบถาดอาหารที่วางรออยู่กลางร้าน ยังไม่ต้องเลี้ยวในภารกิจนี้',
+    gridSize:6, start:{x:1,y:4,dir:1}, coral:[], plastics:[{x:5,y:4}], dock:null,
+    allow:['forward','turnLeft','turnRight'],
+    energy:null,
+    hint:'ลากบล็อก “เดินหน้า” มาต่อกันทั้งหมด 4 บล็อก หุ่นยนต์จะเคลื่อนที่ไปทางขวาทีละ 1 ช่องจนถึงถาดอาหาร'
+  },
+  learn2:{
+    key:'learn2', label:'ภาระงานที่ 2', title:'หลบเก้าอี้ที่ดึงออกมา',
+    concept:'<b>แนวคิด: การเลี้ยวเพื่อหลบสิ่งกีดขวาง</b> — เมื่อทางตรงถูกปิดกั้น ตัวแทนดิจิทัลต้องเปลี่ยนทิศทาง การเลี้ยวซ้าย/ขวาเปลี่ยนแค่ทิศที่หันหน้า ไม่ได้ทำให้เคลื่อนที่',
+    intro:'มีเก้าอี้ที่ลูกค้าดึงออกมา (สีส้ม) ขวางเส้นทางตรงอยู่ข้างหน้า ให้ลากบล็อก “เลี้ยวซ้าย/เลี้ยวขวา” มาผสมกับ “เดินหน้า” เพื่ออ้อมลงไปหยิบถาดอาหารทางด้านล่างโดยไม่ชนเก้าอี้',
+    gridSize:6, start:{x:0,y:1,dir:1}, coral:[{x:2,y:1}], plastics:[{x:2,y:4}], dock:null,
+    allow:['forward','turnLeft','turnRight'],
+    energy:null,
+    hint:'ลองเรียงบล็อกแบบนี้: เดินหน้า → เลี้ยวขวา → เดินหน้า, เดินหน้า, เดินหน้า → เลี้ยวซ้าย → เดินหน้า เพื่ออ้อมลงมาใต้เก้าอี้ที่กีดขวางแล้วเลี้ยวกลับไปหยิบถาดอาหาร'
+  },
+  learn3:{
+    key:'learn3', label:'ภาระงานที่ 3', title:'ใช้คำสั่งทำซ้ำให้มีประสิทธิภาพ',
+    concept:'<b>แนวคิด: การทำซ้ำ (Loop)</b> — เมื่อต้องทำสิ่งเดียวกันซ้ำ ๆ การวางบล็อกซ้ำทีละอันจะยาวและแก้ไขยาก บล็อกตัว C “ทำซ้ำ” ช่วยบีบอัดคำสั่งให้กระชับและแก้ไขง่ายขึ้น',
+    intro:'มีถาดอาหาร 3 ถาดเรียงกันเป็นแนวตรงตามทางเดินระหว่างโต๊ะกลางร้าน แทนที่จะวางบล็อกเดินหน้าทีละอัน ลองลากบล็อก “ทำซ้ำ” มาวางแล้วหย่อนคำสั่งเดินหน้าไว้ในปากของบล็อกเพื่อประหยัดจำนวนคำสั่ง',
+    gridSize:7, start:{x:1,y:3,dir:1}, coral:[], plastics:[{x:2,y:3},{x:3,y:3},{x:4,y:3}], dock:null,
+    allow:['forward','turnLeft','turnRight','repeat'],
+    energy:null,
+    chartAfter:'blocksBar',
+    hint:'ลากบล็อก “ทำซ้ำ” มาวางใต้หมวกก่อน แล้วลากบล็อก “เดินหน้า” ไปวางในช่องว่างข้างในบล็อกทำซ้ำ จากนั้นแก้ตัวเลขในช่องเป็น 3 — ได้ผลเหมือนเดินหน้า 3 ครั้งแต่ใช้บล็อกน้อยกว่า'
+  },
+  learn4:{
+    key:'learn4', label:'ภาระงานที่ 4', title:'ทำซ้ำแบบมีเงื่อนไข: จนกว่าจะเจอสิ่งกีดขวาง',
+    concept:'<b>แนวคิด: การทำซ้ำแบบมีเงื่อนไข (Conditional Loop)</b> — บางครั้งเราไม่รู้ล่วงหน้าว่าทางเดินระหว่างโต๊ะยาวแค่ไหน บล็อก “ทำซ้ำจนกว่า…” ให้ตัวแทนตัดสินใจเองจากสิ่งที่เซนเซอร์ตรวจพบ แทนที่จะระบุจำนวนครั้งตายตัว — โปรแกรมแบบนี้ “ใช้ซ้ำได้ทั่วไป” (generalize) กับทางเดินความยาวต่าง ๆ',
+    intro:'ทางเดินระหว่างแถวโต๊ะข้างหน้ายาวขึ้นและยาวไม่เท่ากันในแต่ละภารกิจ แทนที่จะนับจำนวนช่องเองแล้วใช้ “ทำซ้ำ N ครั้ง” ลองลากบล็อก “ทำซ้ำจนกว่าจะเจอสิ่งกีดขวางข้างหน้า” มาครอบคำสั่งเดินหน้าไว้ข้างใน หุ่นยนต์จะเดินไปเรื่อย ๆ จนกว่าจะเจอเก้าอี้ที่กีดขวางจึงหยุดเอง',
+    gridSize:8, start:{x:1,y:3,dir:1}, coral:[{x:7,y:3}], plastics:[{x:4,y:3}], dock:null,
+    allow:['forward','turnLeft','turnRight','repeat','repeatUntil'],
+    energy:null,
+    chartAfter:'blocksBar',
+    hint:'ลากบล็อก “ทำซ้ำจนกว่า…” มาวางใต้หมวก เลือกเงื่อนไข “เจอสิ่งกีดขวางข้างหน้า” แล้วลาก “เดินหน้า” ไปวางข้างในเพียงบล็อกเดียว หุ่นยนต์จะเดินไปเรื่อย ๆ จนหยุดเองตรงหน้าเก้าอี้'
+  },
+  learn5:{
+    key:'learn5', label:'ภาระงานที่ 5', title:'เซนเซอร์กับเงื่อนไข if/else',
+    concept:'<b>แนวคิด: เงื่อนไข if/else จากเซนเซอร์</b> — ตัวแทนดิจิทัลที่ฉลาดต้อง “ตัดสินใจ” จากข้อมูลรอบตัวแบบเรียลไทม์ ไม่ใช่เดินตามเส้นทางที่จำไว้ตายตัว บล็อกเซนเซอร์นี้จะเลี้ยวขวาเมื่อเจอสิ่งกีดขวาง มิเช่นนั้นจะเดินหน้าต่อ — เป็นกติกาง่าย ๆ ที่ทำให้หุ่นยนต์ “เลาะขอบร้าน” ไปเองได้ทั่วพื้นที่',
+    intro:'ร้านขยายใหญ่ขึ้นเป็น 8×8 ช่อง ลองรวมบล็อกเซนเซอร์สีฟ้า “ถ้าเจอสิ่งกีดขวางข้างหน้า ให้เลี้ยวขวา มิฉะนั้นเดินหน้า” เข้ากับ “ทำซ้ำจนกว่าจะถึงเคาน์เตอร์ส่งอาหาร” เพียงสองบล็อกนี้ก็เพียงพอให้หุ่นยนต์เลาะขอบพื้นที่ร้านไปหยิบถาดอาหารจนถึงเคาน์เตอร์ได้เอง โดยไม่ต้องเขียนเส้นทางทีละก้าว',
+    gridSize:8, start:{x:0,y:0,dir:1}, coral:[], plastics:[{x:6,y:0},{x:7,y:4}], dock:{x:3,y:7},
+    allow:['forward','turnLeft','turnRight','repeat','repeatUntil','sense'],
+    energy:null,
+    chartAfter:'blocksBar',
+    hint:'ลากบล็อก “ทำซ้ำจนกว่า…” มาวางก่อน เลือกเงื่อนไข “ถึงเคาน์เตอร์ส่งอาหาร” แล้วลากบล็อกเซนเซอร์สีฟ้าไปวางข้างในเพียงบล็อกเดียว หุ่นยนต์จะเลาะขอบร้านไปเก็บถาดจนถึงเคาน์เตอร์เอง'
+  },
+  learn6:{
+    key:'learn6', label:'ภาระงานที่ 6', title:'งบพลังงานแบตเตอรี่: วางแผนให้คุ้มค่าที่สุด',
+    concept:'<b>แนวคิด: ทรัพยากรจำกัด (Resource Constraint)</b> — ระบบจริงมักมีทรัพยากรจำกัด เช่น แบตเตอรี่ของหุ่นยนต์เสิร์ฟ ทุกคำสั่ง “เดินหน้า” ใช้พลังงาน 1 หน่วย (เลี้ยวไม่เสียพลังงาน) กราฟเส้นด้านล่างจะแสดงระดับแบตเตอรี่ที่เหลือหลังทำงานแต่ละก้าว หากพลังงานหมดก่อนถึงเป้าหมาย ภารกิจจะล้มเหลวทันที',
+    intro:'ร้านขยายใหญ่ขึ้นเป็น 7×7 ช่อง มีเก้าอี้กีดขวางเรียงกัน 2 ตัว หุ่นยนต์มีพลังงานแบตเตอรี่เริ่มต้นจำกัดเพียง 8 หน่วย ให้วางแผนเส้นทางไปหยิบถาดอาหารทั้ง 3 ถาดให้ประหยัดพลังงานที่สุด แล้วสังเกตกราฟเส้นพลังงานหลังกดรัน',
+    gridSize:7, start:{x:0,y:0,dir:1}, coral:[{x:1,y:0},{x:1,y:1}], plastics:[{x:2,y:3},{x:3,y:3},{x:4,y:3}], dock:null,
+    allow:['forward','turnLeft','turnRight','repeat'],
+    energy:{fixed:8},
+    chartAfter:'energyLine',
+    hint:'เส้นทางที่ประหยัดที่สุดใช้พลังงาน 7 หน่วย: ลาก “เลี้ยวขวา” → “ทำซ้ำ 3 ครั้ง” ที่มี “เดินหน้า” อยู่ข้างใน → “เลี้ยวซ้าย” → “ทำซ้ำ 4 ครั้ง” ที่มี “เดินหน้า” อยู่ข้างใน เหลือพลังงานสำรอง 1 หน่วยพอดี'
+  },
+
+  apply1:{
+    key:'apply1', label:'ภารกิจประยุกต์ 1', title:'ภารกิจย่อย 1: ส่งอาหารโซนหน้าร้าน',
+    concept:'กิจกรรมปรับพารามิเตอร์ที่ 1/5 — ปรับ “งบพลังงานแบตเตอรี่เริ่มต้น” ของหุ่นยนต์ด้วยแถบเลื่อน แล้วดูผลจากกราฟเส้นพลังงานหลังกดรัน ค่าเริ่มต้นที่ตั้งไว้ให้อาจไม่พอสำหรับภารกิจนี้',
+    intro:'หยิบถาดอาหารทั้ง 2 ถาด แล้วนำหุ่นยนต์ไปที่เคาน์เตอร์ส่งอาหาร โดยใช้พลังงานไม่เกินงบที่คุณตั้งไว้ ลองปรับแถบเลื่อนพลังงานให้เหมาะสมกับเส้นทางที่คุณออกแบบ',
+    gridSize:6, start:{x:0,y:0,dir:1}, coral:[{x:2,y:0},{x:2,y:1}], plastics:[{x:4,y:0},{x:2,y:3}], dock:{x:5,y:5},
+    allow:['forward','turnLeft','turnRight','repeat','repeatUntil','sense'],
+    energy:{min:10,max:26,default:13,optimal:16},
+    chartAfter:'energyLine',
+    hint:'ระยะทางที่สั้นที่สุดใช้พลังงานประมาณ 16 หน่วย — ลองอ้อมเก้าอี้ที่กีดขวางทางขวาไปหยิบถาดแรกด้านบนก่อน แล้ววกลงมาหยิบถาดที่สองก่อนไปเคาน์เตอร์ส่งอาหาร และอย่าลืมปรับแถบเลื่อนพลังงานให้พอ'
+  },
+  apply2:{
+    key:'apply2', label:'ภารกิจประยุกต์ 2', title:'ภารกิจย่อย 2: แถวโต๊ะกั้นรูปตัว L',
+    concept:'กิจกรรมปรับพารามิเตอร์ที่ 2/5 — ผังร้านซับซ้อนขึ้น ลองใช้ “ทำซ้ำจนกว่า…” ช่วยลดจำนวนบล็อกในเส้นทางตรงยาว ๆ และปรับงบพลังงานให้เหมาะสม',
+    intro:'แถวโต๊ะและเก้าอี้สองแนวขวางเป็นรูปตัว L ต้องวางแผนอ้อมอย่างรอบคอบเพื่อหยิบถาดอาหารให้ครบก่อนกลับเคาน์เตอร์ส่งอาหาร',
+    gridSize:7, start:{x:0,y:0,dir:1}, coral:[{x:2,y:1},{x:2,y:2},{x:2,y:3},{x:4,y:3},{x:4,y:4}], plastics:[{x:1,y:4},{x:5,y:1}], dock:{x:6,y:6},
+    allow:['forward','turnLeft','turnRight','repeat','repeatUntil','sense'],
+    energy:{min:12,max:30,default:15,optimal:18},
+    chartAfter:'energyLine',
+    hint:'เส้นทางสั้นที่สุดใช้พลังงานประมาณ 18 หน่วย — หยิบถาดด้านขวาบน (5,1) ก่อนจะสะดวกกว่า เพราะอยู่ใกล้จุดเริ่มต้น จากนั้นวกลงมาอ้อมแถวโต๊ะรูปตัว L ไปหยิบถาดที่เหลือแล้วเข้าเคาน์เตอร์ส่งอาหาร'
+  },
+  apply3:{
+    key:'apply3', label:'ภารกิจประยุกต์ 3', title:'ภารกิจย่อย 3: ช่องแคบกลางแถวโต๊ะ',
+    concept:'กิจกรรมปรับพารามิเตอร์ที่ 3/5 — พื้นที่ร้านใหญ่ขึ้นอีกขั้น ผสมผสานทั้งทำซ้ำแบบนับจำนวนและแบบมีเงื่อนไข พร้อมปรับงบพลังงานให้พอดี ไม่มากไม่น้อยเกินไป',
+    intro:'แถวโต๊ะแนวตั้งยาวขวางกลางร้าน ต้องหาช่องทางเดินเพื่ออ้อมไปหยิบถาดอาหารทั้งสองฝั่งแล้วกลับเคาน์เตอร์ส่งอาหารมุมขวาล่าง',
+    gridSize:7, start:{x:0,y:0,dir:1}, coral:[{x:3,y:0},{x:3,y:1},{x:3,y:2},{x:3,y:3},{x:1,y:4},{x:1,y:5}], plastics:[{x:5,y:2},{x:0,y:6}], dock:{x:6,y:6},
+    allow:['forward','turnLeft','turnRight','repeat','repeatUntil','sense'],
+    energy:{min:14,max:32,default:16,optimal:20},
+    chartAfter:'energyLine',
+    hint:'เส้นทางสั้นที่สุดใช้พลังงานประมาณ 20 หน่วย — แถวโต๊ะแนวตั้งเปิดช่องทางเดินที่แถวล่าง (y=4 เป็นต้นไป) ให้ลอดผ่านไปทางขวาได้ ลองหยิบถาดฝั่งขวาก่อนแล้ววกกลับมาหยิบถาดมุมล่างซ้ายก่อนไปเคาน์เตอร์'
+  },
+  apply4:{
+    key:'apply4', label:'ภารกิจประยุกต์ 4', title:'ภารกิจย่อย 4: เขาวงกตโต๊ะและเสา',
+    concept:'กิจกรรมปรับพารามิเตอร์ที่ 4/5 — ภารกิจเขาวงกตที่ต้องใช้ทั้งเงื่อนไข เซนเซอร์ และการทำซ้ำร่วมกันอย่างมีประสิทธิภาพ พร้อมบริหารงบพลังงานให้รอบคอบที่สุด',
+    intro:'ถาดอาหารกระจาย 3 จุดในผังร้านที่มีโต๊ะและเสาเรียงซับซ้อน วางแผนลำดับการหยิบให้ดีเพื่อประหยัดพลังงานก่อนกลับเคาน์เตอร์ส่งอาหารมุมขวาล่างสุด',
+    gridSize:8, start:{x:0,y:0,dir:1}, coral:[{x:2,y:0},{x:2,y:1},{x:2,y:2},{x:4,y:3},{x:4,y:4},{x:4,y:5},{x:6,y:1},{x:6,y:2}], plastics:[{x:1,y:3},{x:5,y:6},{x:7,y:2}], dock:{x:7,y:7},
+    allow:['forward','turnLeft','turnRight','repeat','repeatUntil','sense'],
+    energy:{min:15,max:35,default:17,optimal:22},
+    chartAfter:'energyLine',
+    hint:'เส้นทางสั้นที่สุดใช้พลังงานประมาณ 22 หน่วย — ลองหยิบถาดที่อยู่ใกล้เส้นทางแนวขอบขวาก่อน (7,2) แล้วค่อยวกลงมาหยิบจุดกลาง (5,6) และจุดซ้าย (1,3) ตามลำดับที่ทำให้ระยะทางรวมสั้นที่สุด'
+  },
+  apply5:{
+    key:'apply5', label:'ภารกิจประยุกต์ 5', title:'ภารกิจย่อย 5 (ภารกิจสุดท้าย): ชั่วโมงเร่งด่วนทั้งร้าน',
+    concept:'กิจกรรมปรับพารามิเตอร์ที่ 5/5 — ภารกิจใหญ่ที่สุด สรุปรวมทุกแนวคิดที่ฝึกมา: ลำดับคำสั่ง การเลี้ยว การทำซ้ำ เงื่อนไข เซนเซอร์ และการบริหารพลังงาน',
+    intro:'แถวโต๊ะรูปตัว U ล้อมพื้นที่ตรงกลางร้าน ถาดอาหารกระจาย 3 จุดรอบพื้นที่ ให้วางแผนเส้นทางที่ประหยัดพลังงานที่สุดไปสู่เคาน์เตอร์ส่งอาหาร',
+    gridSize:8, start:{x:0,y:0,dir:1}, coral:[{x:1,y:1},{x:2,y:1},{x:3,y:1},{x:3,y:2},{x:3,y:3},{x:3,y:4},{x:3,y:5},{x:5,y:5},{x:5,y:4},{x:5,y:3},{x:5,y:2}], plastics:[{x:1,y:4},{x:6,y:6},{x:7,y:1}], dock:{x:4,y:7},
+    allow:['forward','turnLeft','turnRight','repeat','repeatUntil','sense'],
+    energy:{min:18,max:40,default:20,optimal:27},
+    chartAfter:'energyLine',
+    hint:'เส้นทางสั้นที่สุดใช้พลังงานประมาณ 27 หน่วย — แถวโต๊ะรูปตัว U เปิดด้านบน ลองหยิบถาดมุมขวาบน (7,1) ก่อนตั้งแต่ต้นทาง แล้วอ้อมลงล่างผ่านมุมซ้าย (1,4) และปิดท้ายด้วยมุมขวาล่าง (6,6) ก่อนวกเข้าเคาน์เตอร์ส่งอาหารตรงกลางล่าง'
+  }
+};
+
+const LEARN_ORDER = ['learn1','learn2','learn3','learn4','learn5','learn6'];
+const APPLY_ORDER = ['apply1','apply2','apply3','apply4','apply5'];
+
+/* ====================== STATE ====================== */
+const appState = {
+  phase:'intro',
+  student:{ name:'', grade:'' },
+  timeLeft: 30*60,
+  timerHandle:null,
+  show:{answers:{}, likert:{}},
+  reflect:{likert:{}, text1:'', text2:''},
+  taskProgress:{},
+  currentLearnTask:'learn1',
+  currentApplyTask:'apply1',
+  submitState:'idle'
+};
+LEARN_ORDER.concat(APPLY_ORDER).forEach(k=> appState.taskProgress[k]=null);
+
+/* ====================== HELPERS ====================== */
+function key(x,y){ return x+'_'+y; }
+function isCoral(quest,x,y){ return quest.coral.some(c=>c.x===x&&c.y===y); }
+function plasticAt(quest,x,y){ return quest.plastics.find(p=>p.x===x&&p.y===y); }
+function fmtTime(s){
+  const m = Math.floor(s/60), sec = s%60;
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+function esc(str){ return String(str==null?'':str).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function clamp(v,a,b){ return Math.max(a, Math.min(b,v)); }
+
+const PHASES = [
+  {id:'show', label:'แสดงสิ่งที่รู้'},
+  {id:'learn', label:'เรียนรู้'},
+  {id:'apply', label:'ประยุกต์ใช้'},
+  {id:'reflect', label:'ประเมินตนเอง'}
+];
+
+function renderStepper(){
+  const el = document.getElementById('stepper');
+  const activeIdx = PHASES.findIndex(p=>p.id===appState.phase);
+  if(activeIdx<0){ el.innerHTML=''; return; }
+  el.innerHTML = PHASES.map((p,i)=>{
+    let cls='step';
+    if(p.id===appState.phase) cls+=' active';
+    else if(i<activeIdx) cls+=' done';
+    return `<div class="${cls}"><div class="num">${i+1}</div>${p.label}</div>`;
+  }).join('');
+}
+function renderWhoBadge(){
+  const el = document.getElementById('whoBadge');
+  if(!appState.student.name){ el.classList.add('hidden'); return; }
+  el.classList.remove('hidden');
+  el.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 19.5c1.6-3.6 4.6-5.5 7.5-5.5s5.9 1.9 7.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    <span><b>${esc(appState.student.name)}</b> · ${esc(appState.student.grade)}</span>`;
+}
+
+function startTimer(){
+  if(appState.timerHandle) return;
+  appState.timerHandle = setInterval(()=>{
+    if(appState.timeLeft>0){
+      appState.timeLeft--;
+      const box = document.getElementById('timerBox');
+      box.textContent = fmtTime(appState.timeLeft);
+      box.classList.toggle('low', appState.timeLeft<=180);
+    } else if(appState.phase!=='summary'){
+      clearInterval(appState.timerHandle);
+      forceFinish();
+    }
+  },1000);
+}
+function forceFinish(){
+  if(['intro','gate','show','learn'].includes(appState.phase)){ goto('reflect'); }
+  else if(appState.phase==='apply'){ goto('reflect'); }
+}
+
+/* ====================== ROUTER ====================== */
+function goto(phase){
+  appState.phase = phase;
+  renderStepper();
+  renderWhoBadge();
+  const main = document.getElementById('app-main');
+  main.innerHTML='';
+  if(phase==='intro') renderIntro(main);
+  else if(phase==='gate') renderGate(main);
+  else if(phase==='show') renderShow(main);
+  else if(phase==='learn') renderLearnHub(main);
+  else if(phase==='apply') renderApplyHub(main);
+  else if(phase==='reflect') renderReflect(main);
+  else if(phase==='summary') renderSummary(main);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* ====================== INTRO ====================== */
+function renderIntro(main){
+  main.innerHTML = `
+  <div class="intro-hero">
+    <div class="hero-copy">
+      <div class="eyebrow-phase" style="color:#FBD48A;">${iconTag('apply')}แบบฝึกเทียบเคียง PISA 2025 · LDW · ระดับมัธยมศึกษาตอนปลาย</div>
+      <h1>ภารกิจหุ่นยนต์ส่งอาหารตามโต๊ะ: สั่งงานหุ่นยนต์เสิร์ฟด้วยโปรแกรมของคุณเอง</h1>
+      <p>คุณจะรับบทผู้เขียนโปรแกรมควบคุมหุ่นยนต์ส่งอาหารในร้านอาหาร ด้วยตัวแก้ไขบล็อกคำสั่งแบบลาก-วางสไตล์ Scratch — ลำดับคำสั่ง การเลี้ยว การทำซ้ำ เงื่อนไข if/else จากเซนเซอร์ และการบริหารพลังงานแบตเตอรี่จำกัด ภารกิจจำลองโครงสร้างข้อสอบจริง 4 ขั้นตอน ใช้เวลาราว 30 นาที</p>
+      <div class="intro-badges">
+        <div class="badge">1 · แสดงสิ่งที่รู้ (Show) — 6 ข้อ</div>
+        <div class="badge">2 · เรียนรู้ (Learn) — 6 ภาระงาน</div>
+        <div class="badge">3 · ประยุกต์ใช้ (Apply) — 5 ภารกิจ</div>
+        <div class="badge">4 · ประเมินตนเอง (Reflect)</div>
+      </div>
+      <button class="cta" onclick="goto('gate')" style="margin-top:22px;">เริ่มลงทะเบียนเข้าภารกิจ →</button>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 320 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="waterGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#7A2A17"/>
+            <stop offset="1" stop-color="#331E12"/>
+          </linearGradient>
+        </defs>
+        <rect x="0" y="0" width="320" height="300" rx="18" fill="url(#waterGrad)"/>
+        <path d="M0 250 Q60 230 120 248 T240 248 T320 240 V300 H0 Z" fill="#4A2E1D"/>
+        <g opacity="0.9">
+          <line x1="160" y1="0" x2="160" y2="52" stroke="#F4B942" stroke-width="2" opacity="0.55"/>
+          <path d="M143 52 L177 52 L167 70 L153 70 Z" fill="#F4B942" stroke="#7A2A17" stroke-width="1.6"/>
+          <ellipse cx="160" cy="118" rx="60" ry="22" fill="#F4B942" opacity="0.10"/>
+        </g>
+        <g stroke="#F4B942" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85">
+          <ellipse cx="52" cy="238" rx="20" ry="6"/>
+          <ellipse cx="52" cy="232" rx="14" ry="4" fill="#FFDB8E" stroke="none"/>
+          <path d="M40 232c0-2 1-3 2-3M64 232c0-2-1-3-2-3" stroke-width="2" opacity="0.7"/>
+        </g>
+        <g stroke="#FF9A7C" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.85">
+          <ellipse cx="262" cy="238" rx="20" ry="6"/>
+          <ellipse cx="262" cy="232" rx="14" ry="4" fill="#FFC7B0" stroke="none"/>
+          <path d="M250 232c0-2 1-3 2-3M274 232c0-2-1-3-2-3" stroke-width="2" opacity="0.7"/>
+        </g>
+        <g transform="translate(160,222)">
+          <ellipse cx="0" cy="34" rx="42" ry="8" fill="#241407" opacity="0.28"/>
+          <path d="M-9 -70c-4-5-2-10 2-13M7 -73c4-5 2-11-2-14" stroke="#FBEFE6" stroke-width="2.2" stroke-linecap="round" fill="none" opacity="0.55"/>
+          <ellipse cx="0" cy="-42" rx="27" ry="6.4" fill="#F4B942" stroke="#7A2A17" stroke-width="2"/>
+          <path d="M-23 -42c0-12.5 10.5-21 23-21s23 8.5 23 21" fill="#FFFDF9" stroke="#7A2A17" stroke-width="2.2"/>
+          <circle cx="0" cy="-63.5" r="3.4" fill="#7A2A17"/>
+          <rect x="-31" y="-32" width="62" height="44" rx="15" fill="#F3E6D8" stroke="#7A2A17" stroke-width="2.4"/>
+          <rect x="-20.5" y="-17" width="41" height="21" rx="7.5" fill="#2B1B12"/>
+          <circle cx="-9.5" cy="-6.5" r="4.3" fill="#F4B942"/>
+          <circle cx="9.5" cy="-6.5" r="4.3" fill="#F4B942"/>
+          <rect x="-42" y="6" width="16" height="25" rx="6" fill="#2B1B12"/>
+          <rect x="26" y="6" width="16" height="25" rx="6" fill="#2B1B12"/>
+        </g>
+      </svg>
+    </div>
+  </div>
+  <div class="card" style="margin-top:20px;">
+    <h3 class="phase-title" style="font-size:18px;">ก่อนเริ่ม</h3>
+    <p class="lede">คุณจะสั่งงานหุ่นยนต์เสิร์ฟด้วยการ <b>ลากบล็อกคำสั่ง</b> จากกล่องด้านซ้ายมาต่อกันบนพื้นที่เขียนสคริปต์ เหมือนโปรแกรม Scratch — บล็อกที่ใช้ได้จะค่อย ๆ เพิ่มขึ้นทีละภาระงาน ได้แก่ <b>เดินหน้า</b>, <b>เลี้ยวซ้าย/ขวา</b>, <b>ทำซ้ำ</b>, <b>ทำซ้ำจนกว่า…</b> (เงื่อนไข), <b>เซนเซอร์ if/else</b> และการบริหาร <b>พลังงานแบตเตอรี่</b> จำกัด ระบบจะให้คำแนะนำและตัวอย่างเฉลยหากคุณลองผิดหลายครั้ง คำตอบระหว่างทำจะยังไม่เฉลยทันที แต่จะสรุปเป็นรายงานผลเมื่อจบภารกิจทั้งหมด</p>
+  </div>`;
+}
+
+/* ====================== GATE (name + grade) ====================== */
+function renderGate(main){
+  main.innerHTML = `
+  <div class="card" style="max-width:640px; margin:0 auto;">
+    <div class="eyebrow-phase">${iconTag('summary')}ลงทะเบียนก่อนเริ่มภารกิจ</div>
+    <h2 class="phase-title">กรอกข้อมูลผู้เข้าร่วมฝึก</h2>
+    <p class="lede">ข้อมูลนี้จะแสดงอยู่ที่แถบด้านบนตลอดการทำภารกิจ และถูกบันทึกไว้พร้อมรายงานผลเมื่อจบภารกิจ</p>
+    <div class="gate-form">
+      <div>
+        <label class="field-label">ชื่อผู้เข้าร่วม</label>
+        <input class="field-input" id="gateName" type="text" placeholder="เช่น ด.ช. สมชาย ใจดี" maxlength="60">
+      </div>
+      <div>
+        <label class="field-label">ระดับชั้น</label>
+        <select class="field-input" id="gateGrade">
+          <option value="">— เลือกระดับชั้น —</option>
+          ${GRADE_LEVELS.map(g=>`<option value="${esc(g)}">${esc(g)}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="gate-error" id="gateError">กรุณากรอกชื่อและเลือกระดับชั้นให้ครบก่อนเริ่มภารกิจ</div>
+    <div class="nav-row">
+      <button class="ghost-btn" onclick="goto('intro')">← ย้อนกลับ</button>
+      <button class="cta" onclick="submitGate()">เริ่มภารกิจ →</button>
+    </div>
+  </div>`;
+}
+function submitGate(){
+  const name = document.getElementById('gateName').value.trim();
+  const grade = document.getElementById('gateGrade').value;
+  if(!name || !grade){
+    document.getElementById('gateError').style.display='block';
+    return;
+  }
+  appState.student.name = name;
+  appState.student.grade = grade;
+  startTimer();
+  goto('show');
+}
+
+/* ====================== SHOW PHASE ====================== */
+const SHOW_MCQ = [
+  {
+    q:'ถ้าหุ่นยนต์ส่งอาหารหันหน้าไปทาง “ขวา” แล้วได้รับคำสั่ง “เลี้ยวซ้าย” หนึ่งครั้ง หุ่นยนต์จะหันไปทางทิศใด?',
+    options:['ทิศบน','ทิศล่าง','ทิศขวา (เดิม)','ทิศซ้าย'],
+    correct:0
+  },
+  {
+    q:'ต้องการให้หุ่นยนต์เดินหน้าติดกัน 5 ช่องตามทางเดินระหว่างโต๊ะ วิธีใดใช้จำนวนบล็อกคำสั่งน้อยที่สุด?',
+    options:['วางบล็อก “เดินหน้า” ต่อกัน 5 บล็อก','ใช้บล็อก “ทำซ้ำ 5 ครั้ง” ครอบบล็อก “เดินหน้า” เพียง 1 บล็อก','ใช้บล็อก “เลี้ยวขวา” 5 บล็อก','ใช้บล็อก “เดินหน้า” เพียง 1 บล็อก'],
+    correct:1
+  },
+  {
+    q:'เมื่อหุ่นยนต์เจอเก้าอี้ที่ลูกค้าดึงออกมาขวางอยู่ตรงหน้าพอดี ควรทำอย่างไร?',
+    options:['สั่งเดินหน้าต่อไปเรื่อย ๆ','เลี้ยวเพื่อหาเส้นทางอ้อม','หยุดภารกิจทันที','เพิ่มจำนวนครั้งของคำสั่งทำซ้ำ'],
+    correct:1
+  },
+  {
+    q:'ข้อใดอธิบาย “ทำซ้ำจนกว่าจะเจอสิ่งกีดขวางข้างหน้า” ได้ถูกต้องที่สุด?',
+    options:[
+      'ทำงานตามจำนวนครั้งที่ระบุไว้ตายตัวเสมอ ไม่ว่าทางข้างหน้าจะเป็นอย่างไร',
+      'ทำงานซ้ำโดยเช็กเงื่อนไขจากสิ่งที่ตรวจพบจริงในขณะนั้น จึงใช้ได้กับทางเดินที่มีความยาวไม่แน่นอน',
+      'เป็นคำสั่งเดียวกับ “เดินหน้า” เพียงแต่เปลี่ยนชื่อ',
+      'ใช้ได้เฉพาะเมื่อไม่มีสิ่งกีดขวางในผังร้านเท่านั้น'
+    ],
+    correct:1
+  },
+  {
+    q:'บล็อกเซนเซอร์ “ถ้าเจอสิ่งกีดขวางข้างหน้า ให้เลี้ยวขวา มิฉะนั้นเดินหน้า” จัดเป็นแนวคิดโปรแกรมมิงประเภทใด?',
+    options:['ลำดับคำสั่ง (Sequence)','การทำซ้ำแบบนับจำนวน (Counted loop)','เงื่อนไข if/else จากข้อมูลเซนเซอร์','ตัวแปรพลังงาน (Energy variable)'],
+    correct:2
+  },
+  {
+    q:'ถ้าหุ่นยนต์ส่งอาหารมีแบตเตอรี่จำกัด และ “เดินหน้า” 1 ครั้งใช้พลังงาน 1 หน่วย (เลี้ยวไม่เสียพลังงาน) การเขียนโปรแกรมแบบใดช่วยประหยัดพลังงานได้ดีที่สุดเมื่อต้องเดินหน้าซ้ำเป็นแนวตรง?',
+    options:['วางบล็อก “เดินหน้า” หลาย ๆ บล็อกแยกกัน','ใช้บล็อก “ทำซ้ำ” หรือ “ทำซ้ำจนกว่า…” เพื่อลดจำนวนบล็อกและวางแผนเส้นทางให้สั้นที่สุด','เพิ่มจำนวนบล็อกเลี้ยวให้มากขึ้น','ไม่มีผลต่อพลังงานที่ใช้ เพราะพลังงานขึ้นกับจำนวนบล็อกเท่านั้น ไม่ขึ้นกับระยะทาง'],
+    correct:1
+  }
+];
+function renderShow(main){
+  main.innerHTML = `
+  <div class="card">
+    <div class="eyebrow-phase">${iconTag('show')}ขั้นตอนที่ 1 · SHOW — แสดงสิ่งที่รู้</div>
+    <h2 class="phase-title">ก่อนฝึก มาดูความรู้พื้นฐานของคุณกันก่อน</h2>
+    <p class="lede">คำตอบในส่วนนี้ไม่มีการเฉลยทันที แต่จะถูกใช้เพื่อทำความเข้าใจพื้นฐานความรู้เดิมของคุณก่อนเข้าสู่บทเรียน เช่นเดียวกับขั้นตอน Show ของ PISA LDW จริง</p>
+    <div id="showQs"></div>
+    <div class="nav-row">
+      <span></span>
+      <button class="cta" onclick="submitShow()">ไปยังขั้นตอนเรียนรู้ →</button>
+    </div>
+  </div>`;
+
+  const qWrap = document.getElementById('showQs');
+  qWrap.innerHTML = SHOW_MCQ.map((item,qi)=>`
+    <div class="q-block">
+      <div class="q-text">${qi+1}. ${item.q}</div>
+      <div class="opt-list">
+        ${item.options.map((op,oi)=>`
+          <label class="opt" id="opt_${qi}_${oi}">
+            <input type="radio" name="mcq${qi}" value="${oi}" onchange="selectMcq(${qi},${oi})">
+            ${op}
+          </label>`).join('')}
+      </div>
+    </div>`).join('');
+
+  attachLikertHandlers();
+}
+function selectMcq(qi,oi){
+  appState.show.answers[qi]=oi;
+  for(let i=0;i<4;i++){
+    const el = document.getElementById(`opt_${qi}_${i}`);
+    if(el) el.classList.toggle('selected', i===oi);
+  }
+}
+function likertRow(name){
+  return `<div class="likert-row"><div style="flex:1"></div><div class="likert-scale">
+    ${[1,2,3,4,5].map(v=>`<label>${v}<input type="radio" name="${name}" value="${v}"></label>`).join('')}
+  </div></div>
+  <div style="display:flex; justify-content:space-between; font-size:11.5px; color:#9A8570; margin-top:2px;">
+    <span>ไม่เห็นด้วยอย่างยิ่ง</span><span>เห็นด้วยอย่างยิ่ง</span>
+  </div>`;
+}
+function attachLikertHandlers(){
+  document.querySelectorAll('input[type=radio]').forEach(inp=>{
+    if(inp.name.startsWith('mcq') || inp.name.startsWith('reflect_')) return;
+    inp.addEventListener('change', ()=>{
+      appState.show.likert[inp.name] = inp.value;
+    });
+  });
+}
+function submitShow(){
+  goto('learn');
+}
+
+/* ====================== LEARN / APPLY HUBS ====================== */
+function renderLearnHub(main){ renderTaskPhase(main, appState.currentLearnTask); }
+function renderApplyHub(main){ renderTaskPhase(main, appState.currentApplyTask); }
+
+function taskTabsHtml(order, activeKey){
+  return `<div class="task-tabs">${order.map(k=>{
+    const q=QUESTS[k];
+    const prog = appState.taskProgress[k];
+    let cls='task-tab';
+    if(k===activeKey) cls+=' current';
+    else if(prog && prog.success) cls+=' completed';
+    return `<div class="${cls}">${q.label}${prog&&prog.success?' ✓':''}</div>`;
+  }).join('')}</div>`;
+}
+function phaseOf(questKey){ return questKey.startsWith('learn') ? 'learn' : 'apply'; }
+function orderOf(questKey){ return phaseOf(questKey)==='learn' ? LEARN_ORDER : APPLY_ORDER; }
+
+const BLOCK_DEFS = {
+  forward:{ label:'เดินหน้า', cls:'', icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M12 5l-6 6M12 5l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  turnLeft:{ label:'เลี้ยวซ้าย', cls:'', icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M8 5 4 9l4 4M4 9h9a7 7 0 0 1 7 7v1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  turnRight:{ label:'เลี้ยวขวา', cls:'', icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M16 5l4 4-4 4M20 9h-9a7 7 0 0 0-7 7v1" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  repeat:{ label:'ทำซ้ำ', cls:'repeat-btn', icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M4 12a8 8 0 0 1 13.6-5.7M20 12a8 8 0 0 1-13.6 5.7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><path d="M17 3v4h-4M7 21v-4h4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>` },
+  repeatUntil:{ label:'ทำซ้ำจนกว่า…', cls:'until-btn', icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="2.1"/><path d="M12 7.5V12l3 2" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/></svg>` },
+  sense:{ label:'เซนเซอร์ if/else', cls:'sense-btn', icon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 3v4M12 17v4M3 12h4M17 12h4" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/><circle cx="12" cy="12" r="3.4" stroke="currentColor" stroke-width="2.1"/></svg>` }
+};
+function blockLabel(type){ const d=BLOCK_DEFS[type]; return `<span style="vertical-align:-2px; display:inline-flex; margin-right:4px;">${d.icon}</span>${d.label}`; }
+
+/* ====================== SHARED RUNTIME ====================== */
+const runtime = { program:[], undo:[], state:null, quest:null, running:false, energyBudget:null };
+
+/* ====================== SCRATCH-STYLE BLOCK EDITOR ====================== */
+const CAT = {forward:'motion', turnLeft:'motion', turnRight:'motion',
+             repeat:'control', repeatUntil:'control', sense:'sensing'};
+const SENSE_TEXT = 'ถ้าเจอสิ่งกีดขวาง → เลี้ยวขวา มิฉะนั้น → เดินหน้า';
+let _bid = 1;
+
+function mkBlock(type){
+  const b = {id:'b'+(_bid++), type};
+  if(type==='repeat'){ b.times=4; b.blocks=[]; }
+  if(type==='repeatUntil'){ b.cond=(runtime.quest && runtime.quest.dock)?'dock':'obstacle'; b.blocks=[]; }
+  return b;
+}
+function getList(path){ let l=runtime.program; for(const i of path){ l=l[i].blocks; } return l; }
+function getBlockAt(path){ return getList(path.slice(0,-1))[path[path.length-1]]; }
+function countBlocks(list){ return list.reduce((n,b)=> n+1+(b.blocks?countBlocks(b.blocks):0), 0); }
+
+function blockFace(type){
+  const d = BLOCK_DEFS[type];
+  const txt = (type==='sense') ? SENSE_TEXT : d.label;
+  return `${d.icon}<span>${txt}</span>`;
+}
+
+/* ---- palette ---- */
+function paletteHtml(allow){
+  const groups = [
+    {name:'การเคลื่อนที่', items:['forward','turnLeft','turnRight']},
+    {name:'การควบคุม',   items:['repeat','repeatUntil']},
+    {name:'เซนเซอร์',     items:['sense']}
+  ];
+  let html = '';
+  groups.forEach(g=>{
+    const items = g.items.filter(t=>allow.includes(t));
+    if(!items.length) return;
+    html += `<div class="sb-cat">${g.name}</div>` + items.map(paletteBlockHtml).join('');
+  });
+  html += `<div class="sb-trash-msg">ปล่อยที่นี่เพื่อลบบล็อก</div>`;
+  return html;
+}
+function paletteBlockHtml(type){
+  if(type==='repeat' || type==='repeatUntil'){
+    const t = type==='repeat' ? 'ทำซ้ำ 4 ครั้ง' : 'ทำซ้ำจนกว่า…';
+    return `<div class="sb-block sb-c sb-control" data-type="${type}">
+      <div class="sb-c-head sb-row">${BLOCK_DEFS[type].icon}<span>${t}</span></div>
+      <div class="sb-list sb-inner"><div class="sb-empty">วางคำสั่งข้างใน</div></div>
+      <div class="sb-c-foot"></div></div>`;
+  }
+  return `<div class="sb-block sb-simple sb-${CAT[type]}" data-type="${type}">
+    <div class="sb-row">${blockFace(type)}</div></div>`;
+}
+
+/* ---- script canvas ---- */
+function renderScript(){
+  const canvas = document.getElementById('scriptCanvas');
+  if(!canvas) return;
+  canvas.innerHTML = `<div class="sb-hat">▶ เมื่อกดปุ่ม “รันคำสั่ง”</div>` + listHtml(runtime.program, []);
+  const cnt = document.getElementById('blockCount');
+  if(cnt) cnt.textContent = countBlocks(runtime.program);
+}
+function listHtml(list, path){
+  const inner = list.length
+    ? list.map((b,i)=>blockHtml(b, path.concat(i))).join('')
+    : `<div class="sb-empty">${path.length ? 'ลากคำสั่งมาวางข้างใน' : 'ลากบล็อกจากกล่องด้านซ้ายมาต่อใต้หมวกนี้'}</div>`;
+  return `<div class="sb-list${path.length?' sb-inner':''}" data-lp='${JSON.stringify(path)}'>${inner}</div>`;
+}
+function blockHtml(b, path){
+  const p = JSON.stringify(path);
+  if(b.type==='repeat' || b.type==='repeatUntil'){
+    let head;
+    if(b.type==='repeat'){
+      head = `${BLOCK_DEFS.repeat.icon}<span>ทำซ้ำ</span>
+        <input class="sb-num" type="number" min="1" max="20" value="${b.times}" data-bp='${p}' onchange="onRepeatTimes(this)">
+        <span>ครั้ง</span>`;
+    } else {
+      const hasDock = !!(runtime.quest && runtime.quest.dock);
+      head = `${BLOCK_DEFS.repeatUntil.icon}<span>ทำซ้ำจนกว่า</span>
+        <select class="sb-sel" data-bp='${p}' onchange="onUntilCond(this)">
+          <option value="obstacle"${b.cond==='obstacle'?' selected':''}>เจอสิ่งกีดขวางข้างหน้า</option>
+          ${hasDock?`<option value="dock"${b.cond==='dock'?' selected':''}>ถึงเคาน์เตอร์ส่งอาหาร</option>`:''}
+        </select>`;
+    }
+    return `<div class="sb-block sb-c sb-control" data-bp='${p}' data-bid="${b.id}">
+      <div class="sb-c-head sb-row">${head}<button class="sb-del" data-bp='${p}' onclick="deleteBlock(this)">×</button></div>
+      ${listHtml(b.blocks, path)}
+      <div class="sb-c-foot"></div></div>`;
+  }
+  return `<div class="sb-block sb-simple sb-${CAT[b.type]}" data-bp='${p}' data-bid="${b.id}">
+    <div class="sb-row">${blockFace(b.type)}<button class="sb-del" data-bp='${p}' onclick="deleteBlock(this)">×</button></div></div>`;
+}
+
+/* ---- edits ---- */
+function onRepeatTimes(inp){
+  const b = getBlockAt(JSON.parse(inp.dataset.bp));
+  const v = clamp(parseInt(inp.value)||1, 1, 20);
+  inp.value = v; b.times = v;
+}
+function onUntilCond(sel){ getBlockAt(JSON.parse(sel.dataset.bp)).cond = sel.value; }
+function deleteBlock(btn){
+  if(runtime.running) return;
+  pushUndo();
+  const path = JSON.parse(btn.dataset.bp);
+  getList(path.slice(0,-1)).splice(path[path.length-1], 1);
+  renderScript();
+}
+function pushUndo(){
+  runtime.undo = runtime.undo || [];
+  runtime.undo.push(JSON.stringify(runtime.program));
+  if(runtime.undo.length>50) runtime.undo.shift();
+}
+function undoBlock(){
+  if(runtime.running || !runtime.undo || !runtime.undo.length) return;
+  runtime.program = JSON.parse(runtime.undo.pop());
+  renderScript();
+}
+function clearProgram(){
+  if(runtime.running) return;
+  pushUndo(); runtime.program = []; renderScript();
+}
+
+/* ---- drag & drop ---- */
+const drag = {armed:false, on:false, mode:null, type:null, block:null, ghost:null,
+              sx:0, sy:0, ox:0, oy:0, origin:null, target:null, trash:false};
+
+function bindEditor(){
+  const pal = document.getElementById('sbPalette');
+  const canvas = document.getElementById('scriptCanvas');
+  if(pal) pal.addEventListener('pointerdown', e=>{
+    if(runtime.running) return;
+    const el = e.target.closest('.sb-block'); if(!el) return;
+    armDrag(e, el, {mode:'create', type:el.dataset.type});
+  });
+  if(canvas) canvas.addEventListener('pointerdown', e=>{
+    if(runtime.running) return;
+    if(e.target.closest('input,select,button')) return;
+    const el = e.target.closest('.sb-block'); if(!el) return;
+    armDrag(e, el, {mode:'move', path:JSON.parse(el.dataset.bp)});
+  });
+  if(!window._sbBound){
+    window._sbBound = true;
+    window.addEventListener('pointermove', onDragMove, {passive:false});
+    window.addEventListener('pointerup', onDragEnd);
+    window.addEventListener('pointercancel', onDragEnd);
+  }
+}
+function armDrag(e, el, info){
+  const r = el.getBoundingClientRect();
+  drag.armed=true; drag.on=false; drag.trash=false; drag.target=null;
+  drag.mode=info.mode; drag.type=info.type||null; drag.origin=info.path||null;
+  drag.sx=e.clientX; drag.sy=e.clientY;
+  drag.ox=e.clientX-r.left; drag.oy=e.clientY-r.top;
+}
+function onDragMove(e){
+  if(!drag.armed) return;
+  if(!drag.on){
+    if(Math.hypot(e.clientX-drag.sx, e.clientY-drag.sy) < 6) return;
+    startDragging();
+  }
+  e.preventDefault();
+  drag.ghost.style.left = (e.clientX-drag.ox)+'px';
+  drag.ghost.style.top  = (e.clientY-drag.oy)+'px';
+  updateDropIndicator(e.clientX, e.clientY);
+}
+function startDragging(){
+  drag.on = true;
+  if(drag.mode==='create'){
+    drag.block = mkBlock(drag.type);
+  } else {
+    pushUndo();
+    const p = drag.origin;
+    drag.block = getList(p.slice(0,-1)).splice(p[p.length-1], 1)[0];
+    renderScript();
+  }
+  const g = document.createElement('div');
+  g.className = 'sb-ghost';
+  g.innerHTML = blockHtml(drag.block, []);
+  document.body.appendChild(g);
+  drag.ghost = g;
+}
+function findDropTarget(x,y){
+  const lists = [...document.querySelectorAll('#scriptCanvas .sb-list')];
+  let best=null, bestDepth=-1;
+  for(const el of lists){
+    const r = el.getBoundingClientRect(), pad = 16;
+    if(x>=r.left-pad && x<=r.right+pad && y>=r.top-pad && y<=r.bottom+pad){
+      const d = JSON.parse(el.dataset.lp).length;
+      if(d>bestDepth){ bestDepth=d; best=el; }
+    }
+  }
+  if(!best) return null;
+  const kids = [...best.children].filter(c=>c.classList.contains('sb-block'));
+  let idx = kids.length;
+  for(let i=0;i<kids.length;i++){
+    const r = kids[i].getBoundingClientRect();
+    if(y < r.top + r.height/2){ idx=i; break; }
+  }
+  return {path:JSON.parse(best.dataset.lp), index:idx, el:best, kids};
+}
+function updateDropIndicator(x,y){
+  clearDropIndicator();
+  const pal = document.getElementById('sbPalette');
+  if(!pal) return;
+  const pr = pal.getBoundingClientRect();
+  drag.trash = (drag.mode==='move') && x>=pr.left && x<=pr.right && y>=pr.top && y<=pr.bottom;
+  pal.classList.toggle('trash', drag.trash);
+  if(drag.trash){ drag.target=null; return; }
+  const t = findDropTarget(x,y);
+  drag.target = t;
+  if(!t) return;
+  const m = document.createElement('div');
+  m.className='sb-drop'; m.id='sbDropMarker';
+  if(t.index>=t.kids.length) t.el.appendChild(m); else t.el.insertBefore(m, t.kids[t.index]);
+}
+function clearDropIndicator(){ const m=document.getElementById('sbDropMarker'); if(m) m.remove(); }
+function onDragEnd(){
+  if(!drag.armed) return;
+  const wasDragging = drag.on;
+  drag.armed = false;
+  if(!wasDragging){
+    if(drag.mode==='create'){ pushUndo(); runtime.program.push(mkBlock(drag.type)); renderScript(); }
+    resetDrag(); return;
+  }
+  clearDropIndicator();
+  const pal = document.getElementById('sbPalette'); if(pal) pal.classList.remove('trash');
+  if(drag.ghost) drag.ghost.remove();
+  if(!drag.trash){
+    if(drag.target){
+      const list = getList(drag.target.path);
+      list.splice(Math.min(drag.target.index, list.length), 0, drag.block);
+    } else if(drag.mode==='move' && drag.origin){
+      const list = getList(drag.origin.slice(0,-1));
+      list.splice(Math.min(drag.origin[drag.origin.length-1], list.length), 0, drag.block);
+    }
+  }
+  renderScript();
+  resetDrag();
+}
+function resetDrag(){
+  drag.on=false; drag.mode=null; drag.type=null; drag.block=null;
+  drag.ghost=null; drag.origin=null; drag.target=null; drag.trash=false;
+}
+
+/* ====================== TASK PHASE ====================== */
+function renderTaskPhase(main, questKey){
+  const quest = QUESTS[questKey];
+  const isLearn = phaseOf(questKey)==='learn';
+  const order = orderOf(questKey);
+  if(!appState.taskProgress[questKey]){
+    appState.taskProgress[questKey] = {attempts:0, blocksUsed:0, movesUsed:0, success:false, energyBudget:null, energyUsed:null, energyTrace:[]};
+  }
+  const phaseLabel = isLearn ? 'ขั้นตอนที่ 2 · LEARN — เรียนรู้' : 'ขั้นตอนที่ 3 · APPLY — ประยุกต์ใช้';
+  const phaseIcon  = isLearn ? 'learn' : 'apply';
+
+  /* ตั้งค่า runtime ก่อนวาด เพราะ paletteHtml/blockHtml ต้องใช้ quest */
+  runtime.program = [];
+  runtime.undo = [];
+  runtime.state = {...quest.start, collected:new Set()};
+  runtime.quest = quest;
+  runtime.running = false;
+
+  const tunable = quest.energy && quest.energy.min!=null;
+  if(tunable && runtime.energyBudget==null) runtime.energyBudget = quest.energy.default;
+
+  main.innerHTML = `
+  <div class="card">
+    <div class="eyebrow-phase">${iconTag(phaseIcon)}${phaseLabel}</div>
+    <h2 class="phase-title">${quest.title}</h2>
+    ${taskTabsHtml(order, questKey)}
+    <div class="two-col">
+      <div>
+        <div class="concept-box">${quest.concept}</div>
+        <p class="lede">${quest.intro}</p>
+        ${quest.energy ? energyControlHtml(quest) : ''}
+        <div id="feedbackArea"></div>
+        <div id="hintArea"></div>
+        <div class="stat-line" id="statLine" style="margin-top:14px;"></div>
+        <div id="chartArea"></div>
+      </div>
+      <div class="mission-panel">
+        <div class="grid-wrap"><div id="gridEl" class="grid"></div></div>
+        <div class="sb-wrap">
+          <div class="sb-palette" id="sbPalette">${paletteHtml(quest.allow)}</div>
+          <div class="sb-canvas" id="scriptCanvas"></div>
+        </div>
+        <div class="run-row">
+          <button class="run-btn" id="runBtn" onclick="runCurrentProgram('${questKey}')"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M6 4.5v15l13-7.5-13-7.5Z"/></svg> รันคำสั่ง</button>
+          <button class="ghost-btn" onclick="undoBlock()">↶ ย้อนกลับ</button>
+          <button class="ghost-btn" onclick="clearProgram()">ล้างสคริปต์</button>
+          <button class="ghost-btn reset-btn" onclick="resetMission('${questKey}')">↺ รีเซ็ตภารกิจ</button>
+          <span class="stat-line">บล็อกทั้งหมด: <b id="blockCount">0</b></span>
+        </div>
+        <div class="stat-line">ลากบล็อกจากกล่องซ้ายมาวางต่อกัน · วางข้างในบล็อกตัว C เพื่อซ้อนคำสั่ง · ลากกลับไปกล่องซ้ายเพื่อลบ</div>
+      </div>
+    </div>
+    <div class="nav-row">
+      <button class="ghost-btn" onclick="${isLearn? "goto('show')" : "goto('learn')"}">← ย้อนกลับ</button>
+      <button class="cta" id="nextBtn" onclick="advanceFrom('${questKey}')" ${appState.taskProgress[questKey].success?'':'disabled'}>${nextLabel(questKey)}</button>
+    </div>
+  </div>`;
+
+  buildGrid(quest);
+  renderScript();
+  bindEditor();
+  updateStatLine(questKey);
+  if(appState.taskProgress[questKey].success && quest.chartAfter){
+    drawTaskCharts(quest, appState.taskProgress[questKey]);
+  }
+}
+function energyControlHtml(quest){
+  if(quest.energy.min!=null){
+    return `<div class="slider-row">
+      <label class="field-label" style="margin:0;">งบพลังงานแบตเตอรี่เริ่มต้น</label>
+      <input type="range" id="energySlider" min="${quest.energy.min}" max="${quest.energy.max}" value="${runtime.energyBudget}" oninput="onEnergySlide(this.value)">
+      <span class="slider-val" id="energySliderVal">${runtime.energyBudget} หน่วย</span>
+    </div>
+    <div class="energy-readout"><span class="energy-dot"></span>ปรับแถบเลื่อนนี้แล้วกด “รันคำสั่ง” เพื่อดูผลจากกราฟเส้นพลังงาน — ค่าที่ตั้งไว้ให้อาจยังไม่พอ ลองปรับดูได้ตามต้องการ</div>`;
+  }
+  return `<div class="energy-readout"><span class="energy-dot"></span>งบพลังงานแบตเตอรี่คงที่สำหรับภาระงานนี้: <b>${quest.energy.fixed} หน่วย</b> (เดินหน้า 1 ครั้ง = พลังงาน 1 หน่วย, เลี้ยวไม่เสียพลังงาน)</div>`;
+}
+function onEnergySlide(v){
+  runtime.energyBudget = parseInt(v,10);
+  document.getElementById('energySliderVal').textContent = v+' หน่วย';
+}
+function nextLabel(questKey){
+  if(questKey==='learn6') return 'ไปขั้นตอนประยุกต์ใช้ →';
+  if(questKey==='apply5') return 'ไปขั้นตอนประเมินตนเอง →';
+  if(questKey.startsWith('learn')){ const i=LEARN_ORDER.indexOf(questKey); return `ไปภาระงานที่ ${i+2} →`; }
+  const i=APPLY_ORDER.indexOf(questKey); return `ไปภารกิจประยุกต์ ${i+2} →`;
+}
+function advanceFrom(questKey){
+  if(!appState.taskProgress[questKey].success) return;
+  runtime.energyBudget = null;
+  if(questKey==='learn6'){ appState.currentApplyTask='apply1'; goto('apply'); return; }
+  if(questKey==='apply5'){ goto('reflect'); return; }
+  if(questKey.startsWith('learn')){
+    const i=LEARN_ORDER.indexOf(questKey);
+    appState.currentLearnTask = LEARN_ORDER[i+1];
+    goto('learn');
+  } else {
+    const i=APPLY_ORDER.indexOf(questKey);
+    appState.currentApplyTask = APPLY_ORDER[i+1];
+    goto('apply');
+  }
+}
+
+/* ---- grid rendering ---- */
+function buildGrid(quest){
+  const gridEl = document.getElementById('gridEl');
+  gridEl.style.gridTemplateColumns = `repeat(${quest.gridSize}, ${CELL}px)`;
+  gridEl.style.gridTemplateRows = `repeat(${quest.gridSize}, ${CELL}px)`;
+  gridEl.style.width = (CELL*quest.gridSize)+'px';
+  gridEl.style.height = (CELL*quest.gridSize)+'px';
+  let html='';
+  for(let y=0;y<quest.gridSize;y++){
+    for(let x=0;x<quest.gridSize;x++){
+      let cls='cell';
+      if(isCoral(quest,x,y)) cls+=' coral';
+      if(quest.dock && quest.dock.x===x && quest.dock.y===y) cls+=' dock';
+      const inner = isCoral(quest,x,y) ? ICONS.coral : (quest.dock && quest.dock.x===x && quest.dock.y===y ? ICONS.dock : '');
+      html += `<div class="${cls}">${inner}</div>`;
+    }
+  }
+  gridEl.innerHTML = html;
+
+  quest.plastics.forEach((p,i)=>{
+    const t=document.createElement('div');
+    t.className='token plastic-token';
+    t.id='plastic_'+i;
+    t.style.left=(p.x*CELL)+'px';
+    t.style.top=(p.y*CELL)+'px';
+    t.style.width=CELL+'px'; t.style.height=CELL+'px';
+    t.innerHTML = ICONS.plastic;
+    t.querySelector('svg').style.width='60%';
+    t.querySelector('svg').style.height='60%';
+    gridEl.appendChild(t);
+  });
+  if(quest.dock){
+    const lbl=document.createElement('div');
+    lbl.className='dock-label';
+    lbl.style.left=(quest.dock.x*CELL+3)+'px';
+    lbl.style.top=(quest.dock.y*CELL+CELL-15)+'px';
+    lbl.textContent='เคาน์เตอร์';
+    gridEl.appendChild(lbl);
+  }
+  const robot=document.createElement('div');
+  robot.className='token robot-token';
+  robot.id='robotToken';
+  robot.style.width=CELL+'px'; robot.style.height=CELL+'px';
+  robot.style.left=(quest.start.x*CELL)+'px';
+  robot.style.top=(quest.start.y*CELL)+'px';
+  robot.style.transform=`rotate(${DIR_DEG[quest.start.dir]}deg)`;
+  robot.innerHTML = ICONS.robot;
+  robot.querySelector('svg').style.width='78%';
+  robot.querySelector('svg').style.height='78%';
+  gridEl.appendChild(robot);
+}
+function moveRobotVisual(state){
+  const robot=document.getElementById('robotToken');
+  if(!robot) return;
+  robot.style.left=(state.x*CELL)+'px';
+  robot.style.top=(state.y*CELL)+'px';
+  robot.style.transform=`rotate(${DIR_DEG[state.dir]}deg)`;
+}
+function collectPlasticVisual(quest,x,y){
+  const idx = quest.plastics.findIndex(p=>p.x===x&&p.y===y);
+  if(idx>-1){
+    const el=document.getElementById('plastic_'+idx);
+    if(el){ el.style.opacity='0'; el.style.transform='scale(0.2)'; }
+  }
+}
+
+function resetMission(questKey){
+  if(runtime.running) return;
+  const quest = runtime.quest;
+  pushUndo();
+  runtime.program = [];
+  runtime.state = {...quest.start, collected:new Set()};
+  if(quest.energy && quest.energy.min!=null){
+    runtime.energyBudget = quest.energy.default;
+    const slider = document.getElementById('energySlider');
+    const sliderVal = document.getElementById('energySliderVal');
+    if(slider) slider.value = quest.energy.default;
+    if(sliderVal) sliderVal.textContent = quest.energy.default+' หน่วย';
+  }
+  buildGrid(quest);
+  renderScript();
+  const hint = document.getElementById('hintArea'); if(hint) hint.innerHTML='';
+  const fb = document.getElementById('feedbackArea');
+  if(fb) fb.innerHTML = feedback('info', 'รีเซ็ตภารกิจแล้ว — หุ่นยนต์และพื้นที่ร้านกลับสู่จุดเริ่มต้น ลองลากบล็อกวางแผนใหม่อีกครั้ง');
+}
+
+/* ---- execution engine ---- */
+const MAX_ITERS = 60;
+const MAX_TOTAL_STEPS = 250;
+const STEP_DELAY = 300;
+
+function isObstacleAheadState(quest,state){
+  const d = DIRS[state.dir];
+  const nx = state.x+d.dx, ny = state.y+d.dy;
+  if(nx<0||ny<0||nx>=quest.gridSize||ny>=quest.gridSize) return true;
+  if(isCoral(quest,nx,ny)) return true;
+  return false;
+}
+function checkCond(cond, quest, state){
+  if(cond==='obstacle') return isObstacleAheadState(quest,state);
+  if(cond==='dock') return quest.dock && state.x===quest.dock.x && state.y===quest.dock.y;
+  return false;
+}
+async function doTurn(state, delta, ctx){
+  state.dir = (state.dir+4+delta)%4;
+  moveRobotVisual(state);
+  ctx.stepsUsed++;
+  await sleep(STEP_DELAY*0.55);
+  return {ok:true};
+}
+async function doForward(quest, state, ctx){
+  if(ctx.stepsUsed>MAX_TOTAL_STEPS) return {stop:true, fail:'โปรแกรมทำงานวนซ้ำมากเกินไป ลองตรวจสอบเงื่อนไขการหยุดของบล็อก “ทำซ้ำจนกว่า…” อีกครั้ง'};
+  if(quest.energy && state.energy<=0){
+    return {stop:true, fail:'พลังงานแบตเตอรี่หมดก่อนถึงเป้าหมาย! ลองวางแผนเส้นทางให้ประหยัดพลังงานกว่านี้ (ใช้ทำซ้ำ/เซนเซอร์ช่วยลดระยะทาง) หรือปรับงบพลังงานเริ่มต้นเพิ่มขึ้น'};
+  }
+  const d = DIRS[state.dir];
+  const nx = state.x+d.dx, ny = state.y+d.dy;
+  if(nx<0||ny<0||nx>=quest.gridSize||ny>=quest.gridSize){
+    return {stop:true, fail:'หุ่นยนต์เคลื่อนที่ออกนอกขอบเขตพื้นที่ร้าน ลองวางแผนเส้นทางใหม่'};
+  }
+  if(isCoral(quest,nx,ny)){
+    return {stop:true, fail:'หุ่นยนต์ชนเก้าอี้ที่กีดขวางอยู่! ลองใช้คำสั่งเลี้ยวหรือเซนเซอร์เพื่อหาทางอ้อม'};
+  }
+  state.x=nx; state.y=ny;
+  if(quest.energy){ state.energy -= 1; ctx.energyTrace.push(state.energy); }
+  ctx.stepsUsed++;
+  moveRobotVisual(state);
+  await sleep(STEP_DELAY);
+  const p = plasticAt(quest,state.x,state.y);
+  if(p && !state.collected.has(key(state.x,state.y))){
+    state.collected.add(key(state.x,state.y));
+    collectPlasticVisual(quest,state.x,state.y);
+  }
+  return {ok:true};
+}
+
+/* ---- block highlight (Scratch-style glow) ---- */
+function hlBlock(b, on){
+  const el = document.querySelector(`#scriptCanvas [data-bid="${b.id}"]`);
+  if(el) el.classList.toggle('sb-running', on);
+}
+function clearAllHighlights(){
+  document.querySelectorAll('#scriptCanvas .sb-running').forEach(el=>el.classList.remove('sb-running'));
+}
+async function execBlock(block, quest, state, ctx){
+  hlBlock(block, true);
+  const r = await execBlockInner(block, quest, state, ctx);
+  hlBlock(block, false);
+  return r;
+}
+async function execBlockInner(block, quest, state, ctx){
+  if(ctx.stepsUsed>MAX_TOTAL_STEPS) return {stop:true, fail:'โปรแกรมทำงานวนซ้ำมากเกินไป ลองตรวจสอบเงื่อนไขการหยุดของบล็อก “ทำซ้ำจนกว่า…” อีกครั้ง'};
+  if(block.type==='forward') return await doForward(quest, state, ctx);
+  if(block.type==='turnLeft') return await doTurn(state, -1, ctx);
+  if(block.type==='turnRight') return await doTurn(state, 1, ctx);
+  if(block.type==='sense'){
+    if(isObstacleAheadState(quest,state)) return await doTurn(state, 1, ctx);
+    return await doForward(quest, state, ctx);
+  }
+  if(block.type==='repeat'){
+    for(let i=0;i<block.times;i++){
+      const r = await execBlockList(block.blocks, quest, state, ctx);
+      if(r.stop) return r;
+    }
+    return {ok:true};
+  }
+  if(block.type==='repeatUntil'){
+    let iter=0;
+    while(!checkCond(block.cond, quest, state)){
+      if(iter>=MAX_ITERS){
+        return {stop:true, fail:'บล็อก “ทำซ้ำจนกว่า…” วนซ้ำเกิน '+MAX_ITERS+' รอบโดยยังไม่เจอเงื่อนไขหยุด ลองตรวจสอบเงื่อนไขหรือคำสั่งข้างในอีกครั้ง'};
+      }
+      if(block.blocks.length===0) return {stop:true, fail:'บล็อก “ทำซ้ำจนกว่า…” ยังว่างเปล่า ลากคำสั่งไปวางไว้ข้างในก่อนรัน'};
+      const r = await execBlockList(block.blocks, quest, state, ctx);
+      if(r.stop) return r;
+      iter++;
+    }
+    return {ok:true};
+  }
+  return {ok:true};
+}
+async function execBlockList(list, quest, state, ctx){
+  for(const block of list){
+    const r = await execBlock(block, quest, state, ctx);
+    if(r.stop) return r;
+  }
+  return {ok:true};
+}
+
+async function runCurrentProgram(questKey){
+  if(runtime.running) return;
+  const quest = runtime.quest;
+  const feedbackArea = document.getElementById('feedbackArea');
+  feedbackArea.innerHTML='';
+  document.getElementById('hintArea').innerHTML='';
+
+  if(runtime.program.length===0){
+    feedbackArea.innerHTML = feedback('info','ลากบล็อกคำสั่งอย่างน้อย 1 บล็อกมาต่อใต้หมวกก่อนกดรัน');
+    return;
+  }
+  runtime.running = true;
+  document.getElementById('runBtn').disabled = true;
+
+  const initialEnergy = quest.energy ? (quest.energy.fixed!=null ? quest.energy.fixed : runtime.energyBudget) : null;
+  const state = {...quest.start, collected:new Set(), energy: initialEnergy};
+  const ctx = {stepsUsed:0, energyTrace: quest.energy ? [initialEnergy] : []};
+
+  buildGrid(quest);
+  await sleep(150);
+
+  const result = await execBlockList(runtime.program, quest, state, ctx);
+
+  runtime.running = false;
+  clearAllHighlights();
+  document.getElementById('runBtn').disabled = false;
+
+  const prog = appState.taskProgress[questKey];
+  prog.attempts += 1;
+  prog.blocksUsed = countBlocks(runtime.program);
+  prog.movesUsed = ctx.stepsUsed;
+  if(quest.energy){
+    prog.energyBudget = initialEnergy;
+    prog.energyUsed = initialEnergy - state.energy;
+    prog.energyTrace = ctx.energyTrace;
+  }
+
+  if(result.stop){
+    feedbackArea.innerHTML = feedback('bad', result.fail);
+    maybeShowForcedHint(questKey);
+    updateStatLine(questKey);
+    if(quest.chartAfter) drawTaskCharts(quest, prog);
+    return;
+  }
+
+  const allCollected = state.collected.size === quest.plastics.length;
+  const atDock = quest.dock ? (state.x===quest.dock.x && state.y===quest.dock.y) : true;
+
+  if(allCollected && atDock){
+    prog.success = true;
+    feedbackArea.innerHTML = feedback('ok', quest.dock
+      ? 'สำเร็จ! หยิบถาดอาหารครบและนำหุ่นยนต์กลับถึงเคาน์เตอร์ส่งอาหารแล้ว'
+      : 'สำเร็จ! หยิบถาดอาหารครบทุกถาดแล้ว');
+    document.getElementById('nextBtn').disabled=false;
+  } else {
+    let msg = !allCollected ? 'ยังหยิบถาดอาหารไม่ครบทุกถาด' : 'หยิบถาดอาหารครบแล้ว แต่ยังไม่ถึงเคาน์เตอร์ส่งอาหาร';
+    feedbackArea.innerHTML = feedback('info', msg + ' — ลองปรับสคริปต์แล้วรันใหม่อีกครั้ง');
+    maybeShowForcedHint(questKey);
+  }
+  updateStatLine(questKey);
+  if(quest.chartAfter) drawTaskCharts(quest, prog);
+}
+
+function feedback(kind,msg){
+  const icon = kind==='ok' ? '✓' : kind==='bad' ? '✕' : 'ℹ';
+  return `<div class="feedback ${kind}"><span>${icon}</span><span>${msg}</span></div>`;
+}
+function maybeShowForcedHint(questKey){
+  const prog = appState.taskProgress[questKey];
+  if(prog.attempts>=3 && !prog.success){
+    const quest = QUESTS[questKey];
+    document.getElementById('hintArea').innerHTML = `
+      <div class="hint-box">
+        <b>ลองผิดหลายครั้งแล้ว — นี่คือตัวช่วย (worked example):</b><br>${quest.hint}
+      </div>`;
+  }
+}
+function updateStatLine(questKey){
+  const prog = appState.taskProgress[questKey];
+  const quest = QUESTS[questKey];
+  let extra = '';
+  if(quest.energy){
+    extra = ` · พลังงานที่ใช้: ${prog.energyUsed==null?'-':prog.energyUsed} / งบ ${prog.energyBudget==null?'-':prog.energyBudget} หน่วย`;
+  }
+  document.getElementById('statLine').textContent =
+    `ความพยายาม: ${prog.attempts} ครั้ง · บล็อกคำสั่งที่ใช้ล่าสุด: ${prog.blocksUsed} · การเคลื่อนที่จริง: ${prog.movesUsed} ก้าว${extra}`;
+}
+
+/* ====================== INLINE CHARTS (no external deps) ====================== */
+function svgEl(w,h){ return `<svg viewBox="0 0 ${w} ${h}" width="100%" height="${h}" xmlns="http://www.w3.org/2000/svg">`; }
+
+function drawEnergyLineChart(container, trace, budget){
+  const W=460, H=170, padL=34, padR=14, padT=14, padB=26;
+  const innerW = W-padL-padR, innerH = H-padT-padB;
+  const maxY = Math.max(budget, ...trace, 4);
+  const n = trace.length;
+  const xAt = i => padL + (n<=1?0:(innerW*i/(n-1)));
+  const yAt = v => padT + innerH - (v/maxY)*innerH;
+  const pts = trace.map((v,i)=>`${xAt(i)},${yAt(v)}`).join(' ');
+  let grid='';
+  const steps=4;
+  for(let s=0;s<=steps;s++){
+    const v = Math.round(maxY*s/steps);
+    const y = yAt(v);
+    grid += `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}" stroke="rgba(43,27,18,0.08)" stroke-width="1"/>`;
+    grid += `<text x="${padL-6}" y="${y+3}" font-size="9" text-anchor="end" fill="#9A8570">${v}</text>`;
+  }
+  let html = svgEl(W,H);
+  html += grid;
+  html += `<polyline points="${pts}" fill="none" stroke="var(--reef)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+  trace.forEach((v,i)=>{ html += `<circle cx="${xAt(i)}" cy="${yAt(v)}" r="3" fill="${v<=2?'var(--battery-low)':'var(--battery)'}"/>`; });
+  html += `<line x1="${padL}" y1="${H-padB}" x2="${W-padR}" y2="${H-padB}" stroke="#5A4536" stroke-width="1"/>`;
+  html += `<text x="${(padL+W-padR)/2}" y="${H-6}" font-size="9.5" text-anchor="middle" fill="#83705F">ลำดับก้าวการเคลื่อนที่ (Step)</text>`;
+  html += `</svg>`;
+  container.innerHTML = `<div class="chart-card">
+    <h4>กราฟเส้น: ระดับพลังงานแบตเตอรี่คงเหลือระหว่างทำภารกิจ</h4>
+    ${html}
+    <div class="chart-legend">
+      <span><span class="legend-swatch" style="background:var(--reef);"></span> ระดับพลังงาน</span>
+      <span><span class="legend-swatch" style="background:var(--battery-low);"></span> ระดับวิกฤต (≤2 หน่วย)</span>
+    </div>
+  </div>`;
+}
+
+function drawBarChart(container, title, bars, unit){
+  const W=460, H=44*bars.length+40, padL=170, padR=50, padT=10;
+  const maxV = Math.max(...bars.map(b=>b.value), 1);
+  const barH = 26;
+  let html = svgEl(W,H);
+  bars.forEach((b,i)=>{
+    const y = padT + i*44;
+    const w = (b.value/maxV) * (W-padL-padR);
+    html += `<text x="${padL-10}" y="${y+barH/2+4}" font-size="12" text-anchor="end" fill="#5A4536">${b.label}</text>`;
+    html += `<rect x="${padL}" y="${y}" width="${Math.max(2,w)}" height="${barH}" rx="6" fill="${b.color}"/>`;
+    html += `<text x="${padL+Math.max(2,w)+8}" y="${y+barH/2+4}" font-size="12.5" font-weight="700" fill="#2B1B12">${b.value}${unit||''}</text>`;
+  });
+  html += `</svg>`;
+  container.innerHTML = `<div class="chart-card"><h4>${title}</h4>${html}</div>`;
+}
+
+function drawTaskCharts(quest, prog){
+  const area = document.getElementById('chartArea');
+  if(!area) return;
+  if(quest.chartAfter==='blocksBar'){
+    drawBarChart(area, 'แผนภูมิแท่ง: จำนวนบล็อกคำสั่งที่ใช้ (ยิ่งน้อยยิ่งมีประสิทธิภาพ)', [
+      {label:'ถ้าไม่ใช้ทำซ้ำ (นับตามจำนวนก้าว)', value:prog.movesUsed, color:'#E3B23C'},
+      {label:'โปรแกรมของคุณ (บล็อกทั้งหมด)', value:prog.blocksUsed, color:'var(--reef)'}
+    ], ' บล็อก/ก้าว');
+  } else if(quest.chartAfter==='energyLine' && prog.energyTrace && prog.energyTrace.length){
+    drawEnergyLineChart(area, prog.energyTrace, prog.energyBudget);
+  }
+}
+
+/* ====================== REFLECT PHASE ====================== */
+const REFLECT_ITEMS = [
+  {id:'monitor', text:'ฉันตรวจสอบความเข้าใจของตนเองระหว่างเขียนโปรแกรมอยู่เสมอ'},
+  {id:'debug', text:'เมื่อโปรแกรมไม่ทำงานตามที่ต้องการ ฉันพยายามหาสาเหตุและแก้ไขอย่างเป็นระบบ (debug)'},
+  {id:'evaluate', text:'ฉันประเมินความก้าวหน้าและประสิทธิภาพของโปรแกรมตนเองระหว่างทำงานเป็นระยะ'},
+  {id:'persist', text:'ฉันยังคงพยายามทำงานต่อแม้จะรู้สึกติดขัดหรือหงุดหงิด'},
+  {id:'help', text:'ฉันใช้ตัวช่วย/ตัวอย่างเฉลยเมื่อจำเป็น เพื่อให้งานคืบหน้าต่อไปได้'},
+  {id:'transfer', text:'ฉันสามารถนำแนวคิดการทำซ้ำและเงื่อนไขที่ฝึกไปในภาระงานก่อน ๆ มาปรับใช้กับภารกิจที่ซับซ้อนขึ้นได้'}
+];
+function renderReflect(main){
+  main.innerHTML = `
+  <div class="card">
+    <div class="eyebrow-phase">${iconTag('reflect')}ขั้นตอนที่ 4 · REFLECT — ประเมินตนเอง</div>
+    <h2 class="phase-title">ทบทวนการทำงานของคุณ</h2>
+    <p class="lede">ให้คะแนนตนเองในแต่ละข้อความต่อไปนี้ ตามระดับความเห็นด้วยของคุณระหว่างทำภารกิจที่ผ่านมา</p>
+    <div class="q-block">
+      <div class="q-text">ฉันมีความมั่นใจในการใช้เทคโนโลยีดิจิทัล/ICT โดยทั่วไป</div>
+      ${likertRow('ictConf')}
+    </div>
+    <div class="q-block">
+      <div class="q-text">ฉันเคยมีประสบการณ์เขียนโปรแกรมแบบบล็อกคำสั่งมาก่อน (เช่น Scratch, code.org, App Inventor)</div>
+      ${likertRow('blockExp')}
+    </div>
+    <div id="reflectQs"></div>
+    <div class="q-block">
+      <div class="q-text">1) สิ่งที่ฉันเรียนรู้เกี่ยวกับการเขียนโปรแกรมจากภารกิจหุ่นยนต์ส่งอาหารนี้คือ...</div>
+      <textarea class="reflect-box" id="reflectText1" placeholder="เขียนสะท้อนคิดสั้น ๆ เกี่ยวกับสิ่งที่ทำได้ดี หรือแนวคิดที่เพิ่งเข้าใจ (เช่น การทำซ้ำ เงื่อนไข เซนเซอร์)"></textarea>
+    </div>
+    <div class="q-block">
+      <div class="q-text">2) หากหุ่นยนต์ส่งอาหารในร้านจริงตัดสินใจผิดพลาด เช่น เลี้ยวหรือหยุดผิดจังหวะจนอาหารหกใส่ลูกค้าหรือชนโต๊ะเสียหาย ควรออกแบบหรือตรวจสอบโปรแกรมอย่างไรเพื่อลดความเสี่ยงดังกล่าว?</div>
+      <textarea class="reflect-box" id="reflectText2" placeholder="แสดงความคิดเห็นเกี่ยวกับความรับผิดชอบและความน่าเชื่อถือของระบบอัตโนมัติ"></textarea>
+    </div>
+    <div class="nav-row">
+      <button class="ghost-btn" onclick="goto('apply')">← ย้อนกลับ</button>
+      <button class="cta" onclick="submitReflect()">ดูสรุปผลการฝึก →</button>
+    </div>
+  </div>`;
+
+  document.getElementById('reflectQs').innerHTML = REFLECT_ITEMS.map(item=>`
+    <div class="q-block">
+      <div class="q-text">${item.text}</div>
+      ${likertRow('reflect_'+item.id)}
+    </div>`).join('');
+
+  document.querySelectorAll('input[type=radio]').forEach(inp=>{
+    if(!inp.name.startsWith('reflect_')) return;
+    inp.addEventListener('change', ()=>{ appState.reflect.likert[inp.name]=inp.value; });
+  });
+  attachLikertHandlers();
+}
+function submitReflect(){
+  appState.reflect.text1 = document.getElementById('reflectText1').value;
+  appState.reflect.text2 = document.getElementById('reflectText2').value;
+  if(appState.timerHandle){ clearInterval(appState.timerHandle); }
+  goto('summary');
+}
+
+/* ====================== SCORING ====================== */
+function computeShowScore(){
+  let correct=0;
+  SHOW_MCQ.forEach((q,i)=>{ if(appState.show.answers[i]===q.correct) correct++; });
+  return {correct, total:SHOW_MCQ.length, score: Math.round(correct/SHOW_MCQ.length*100)};
+}
+function perTaskScore(prog){
+  if(!prog) return 0;
+  if(!prog.success) return prog.attempts>0 ? 30 : 0;
+  if(prog.attempts<=1) return 100;
+  if(prog.attempts===2) return 85;
+  if(prog.attempts===3) return 70;
+  return 55;
+}
+function computeLearnScore(){
+  const scores = LEARN_ORDER.map(k=>perTaskScore(appState.taskProgress[k]));
+  return Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+}
+function computeApplyScore(){
+  const scores = APPLY_ORDER.map(k=>perTaskScore(appState.taskProgress[k]));
+  return Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+}
+function computeReflectScore(){
+  const vals = REFLECT_ITEMS.map(it=>appState.reflect.likert['reflect_'+it.id]).filter(v=>v!=null).map(Number);
+  if(vals.length===0) return 0;
+  const avg = vals.reduce((a,b)=>a+b,0)/vals.length;
+  return Math.round((avg-1)/4*100);
+}
+function computeTotal(show,learn,apply,reflect){
+  return Math.round(show*0.15 + learn*0.35 + apply*0.35 + reflect*0.15);
+}
+function qualityInfo(total){
+  if(total>=85) return {level:4, cls:'q4', label:'ระดับ 4 · Advanced (สูงมาก)'};
+  if(total>=70) return {level:3, cls:'q3', label:'ระดับ 3 · Proficient (ดี)'};
+  if(total>=50) return {level:2, cls:'q2', label:'ระดับ 2 · Basic (พื้นฐาน)'};
+  return {level:1, cls:'q1', label:'ระดับ 1 · Needs Improvement (ควรฝึกเพิ่ม)'};
+}
+
+function showReportText(showRes){
+  const conf = appState.show.likert['ictConf']||'-';
+  const exp = appState.show.likert['blockExp']||'-';
+  return `ตอบถูก ${showRes.correct}/${showRes.total} ข้อ (${showRes.score}%) | ความมั่นใจ ICT: ${conf}/5 | ประสบการณ์บล็อกโปรแกรมมิ่งมาก่อน: ${exp}/5`;
+}
+function taskReportText(order){
+  return order.map(k=>{
+    const q=QUESTS[k]; const p=appState.taskProgress[k];
+    if(!p) return `${q.label}: ไม่ได้ทำ`;
+    let s = `${q.label}: ${p.success?'สำเร็จ':'ไม่สำเร็จ'} (${p.attempts} ครั้ง, ${p.blocksUsed} บล็อก, ${p.movesUsed} ก้าว`;
+    if(QUESTS[k].energy) s += `, พลังงาน ${p.energyUsed==null?'-':p.energyUsed}/${p.energyBudget==null?'-':p.energyBudget}`;
+    s += ')';
+    return s;
+  }).join(' ; ');
+}
+function reflectReportText(reflectScore){
+  const items = REFLECT_ITEMS.map(it=>`${it.id}=${appState.reflect.likert['reflect_'+it.id]||'-'}`).join(',');
+  const t1 = (appState.reflect.text1||'').slice(0,300);
+  const t2 = (appState.reflect.text2||'').slice(0,300);
+  return `คะแนนเฉลี่ย Likert: ${reflectScore}% [${items}] | ข้อคิดเห็น 1: ${t1} | ข้อคิดเห็น 2: ${t2}`;
+}
+
+/* ====================== SUMMARY / REPORT ====================== */
+function renderSummary(main){
+  const showRes = computeShowScore();
+  const learnScore = computeLearnScore();
+  const applyScore = computeApplyScore();
+  const reflectScore = computeReflectScore();
+  const total = computeTotal(showRes.score, learnScore, applyScore, reflectScore);
+  const q = qualityInfo(total);
+
+  const learnRows = LEARN_ORDER.map(k=>{
+    const qq=QUESTS[k]; const p=appState.taskProgress[k] || {attempts:0,blocksUsed:0,movesUsed:0,success:false};
+    return `<tr><td>${qq.label}</td><td>${p.attempts}</td><td>${p.blocksUsed||'-'}</td><td>${p.movesUsed||'-'}</td>
+      <td><span class="pill ${p.success?'yes':'no'}">${p.success?'สำเร็จ':'ยังไม่สำเร็จ'}</span></td></tr>`;
+  }).join('');
+  const applyRows = APPLY_ORDER.map(k=>{
+    const qq=QUESTS[k]; const p=appState.taskProgress[k] || {attempts:0,blocksUsed:0,movesUsed:0,success:false,energyUsed:null,energyBudget:null};
+    return `<tr><td>${qq.label}</td><td>${p.attempts}</td><td>${p.energyUsed==null?'-':p.energyUsed}</td><td>${p.energyBudget==null?'-':p.energyBudget}</td>
+      <td><span class="pill ${p.success?'yes':'no'}">${p.success?'สำเร็จ':'ยังไม่สำเร็จ'}</span></td></tr>`;
+  }).join('');
+
+  let narrative;
+  if(q.level===4) narrative='ยอดเยี่ยม! คุณออกแบบโปรแกรมได้อย่างมีประสิทธิภาพ ใช้การทำซ้ำและเงื่อนไขได้อย่างเหมาะสม และบริหารพลังงานแบตเตอรี่ได้ดีในภารกิจประยุกต์ใช้';
+  else if(q.level===3) narrative='คุณทำภารกิจสำเร็จในระดับดี มีความเข้าใจแนวคิดการเขียนโปรแกรมเชิงคำนวณ ลองฝึกวางแผนเส้นทางและปรับงบพลังงานให้แม่นยำขึ้นเพื่อลดจำนวนครั้งที่ต้องลองใหม่';
+  else if(q.level===2) narrative='คุณเข้าใจแนวคิดพื้นฐานแล้ว แต่ยังใช้ความพยายามค่อนข้างมากในบางภาระงาน ลองทบทวนตัวช่วย (worked example) ของแต่ละภารกิจและฝึกวางแผนก่อนลงมือรันโปรแกรมทุกครั้ง';
+  else narrative='ควรฝึกฝนเพิ่มเติมในเรื่องการวางลำดับคำสั่ง การทำซ้ำ และเงื่อนไข ลองย้อนกลับไปทำภาระงานในขั้นตอน Learn อีกครั้งโดยอ่านกล่องแนวคิดและตัวช่วยอย่างละเอียดก่อนลงมือ';
+
+  main.innerHTML = `
+  <div class="card">
+    <div class="eyebrow-phase">${iconTag('summary')}สรุปผลการฝึก</div>
+    <h2 class="phase-title">ภาพรวมภารกิจของ ${esc(appState.student.name)} (${esc(appState.student.grade)})</h2>
+    <div class="quality-badge ${q.cls}">${q.label} · คะแนนรวม ${total}/100</div>
+    <p class="lede">${narrative}</p>
+
+    <div class="score-grid">
+      <div class="score-tile"><div class="k">SHOW (15%)</div><div class="v">${showRes.score}</div></div>
+      <div class="score-tile"><div class="k">LEARN (35%)</div><div class="v">${learnScore}</div></div>
+      <div class="score-tile"><div class="k">APPLY (35%)</div><div class="v">${applyScore}</div></div>
+      <div class="score-tile"><div class="k">REFLECT (15%)</div><div class="v">${reflectScore}</div></div>
+    </div>
+
+    <div class="sub-section">
+      <h3>${iconTag('show')} ส่วนที่ 1 — SHOW: แสดงสิ่งที่รู้</h3>
+      <p class="lede">${showReportText(showRes)}</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>${iconTag('learn')} ส่วนที่ 2 — LEARN: เรียนรู้ (6 ภาระงาน)</h3>
+      <table class="summary">
+        <thead><tr><th>ภาระงาน</th><th>จำนวนครั้งที่ลอง</th><th>บล็อกที่ใช้</th><th>การเคลื่อนที่จริง</th><th>ผล</th></tr></thead>
+        <tbody>${learnRows}</tbody>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>${iconTag('apply')} ส่วนที่ 3 — APPLY: ประยุกต์ใช้ (5 กิจกรรมปรับพารามิเตอร์พลังงาน)</h3>
+      <table class="summary">
+        <thead><tr><th>ภารกิจ</th><th>จำนวนครั้งที่ลอง</th><th>พลังงานที่ใช้จริง</th><th>งบพลังงานที่ตั้ง</th><th>ผล</th></tr></thead>
+        <tbody>${applyRows}</tbody>
+      </table>
+      <div id="applyChartArea"></div>
+    </div>
+
+    <div class="sub-section">
+      <h3>${iconTag('reflect')} ส่วนที่ 4 — REFLECT: ประเมินตนเอง</h3>
+      <p class="lede">${reflectReportText(reflectScore)}</p>
+    </div>
+
+    <div class="disclaimer">
+      หมายเหตุ: รายงานนี้ประเมินจากกระบวนการทำงานจริง (ความถูกต้อง ความพยายาม ประสิทธิภาพของโปรแกรม และการบริหารทรัพยากร) เพื่อการฝึกฝนเทียบเคียงเท่านั้น ไม่ใช่คะแนนสอบจริงของ OECD/PISA และไม่ผ่านการวิเคราะห์ทางสถิติแบบข้อสอบมาตรฐาน
+    </div>
+
+    <div id="saveStatusArea" class="save-status"><div class="spinner"></div> กำลังบันทึกผลลง Google Sheet…</div>
+
+    <div class="nav-row">
+      <button class="ghost-btn" onclick="restartAll()">↺ เริ่มฝึกใหม่ทั้งหมด</button>
+      <button class="ghost-btn" onclick="retrySave()">↻ บันทึกผลอีกครั้ง</button>
+    </div>
+  </div>`;
+
+  drawBarChart(document.getElementById('applyChartArea'), 'แผนภูมิแท่ง: พลังงานที่ใช้จริงเทียบกับงบที่ตั้งไว้ในแต่ละภารกิจ',
+    APPLY_ORDER.map(k=>{
+      const p=appState.taskProgress[k];
+      return {label:QUESTS[k].label, value: p&&p.energyUsed!=null? p.energyUsed : 0, color: (p&&p.success)?'var(--reef)':'#E3B23C'};
+    }), ' หน่วย');
+
+  submitToSheet(showRes, learnScore, applyScore, reflectScore, total, q);
+}
+
+/* ====================== GOOGLE SHEET SUBMISSION ====================== */
+async function submitToSheet(showRes, learnScore, applyScore, reflectScore, total, q){
+  const statusArea = document.getElementById('saveStatusArea');
+  const payload = {
+    sheet: SHEET_NAME,
+    testName: 'หุ่นยนต์ส่งอาหารตามโต๊ะในร้านอาหาร',
+    timestamp: new Date().toISOString(),
+    name: appState.student.name,
+    grade: appState.student.grade,
+    showReport: showReportText(showRes),
+    learnReport: taskReportText(LEARN_ORDER),
+    applyReport: taskReportText(APPLY_ORDER),
+    reflectReport: reflectReportText(reflectScore),
+    totalReport: `รวม ${total}/100 (SHOW ${showRes.score}, LEARN ${learnScore}, APPLY ${applyScore}, REFLECT ${reflectScore})`,
+    qualityReport: q.label
+  };
+  try{
+    statusArea.className='save-status';
+    statusArea.innerHTML = '<div class="spinner"></div> กำลังบันทึกผลลง Google Sheet…';
+    const res = await fetch(SHEET_WEBAPP_URL, {
+      method:'POST',
+      headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(!data || data.result !== 'success'){
+      throw new Error((data && data.error) ? data.error : 'ไม่ทราบสาเหตุ (การตอบกลับจากเซิร์ฟเวอร์ไม่ถูกต้อง)');
+    }
+    statusArea.className='save-status ok';
+    statusArea.innerHTML = `✓ บันทึกผลเรียบร้อยแล้ว (ชีท "${esc(data.sheet||SHEET_NAME)}" แถวที่ ${esc(String(data.row||''))})`;
+  }catch(err){
+    statusArea.className='save-status err';
+    statusArea.innerHTML = `✕ บันทึกผลไม่สำเร็จ: ${esc(err && err.message ? err.message : String(err))} — ผลการฝึกของคุณยังแสดงอยู่ด้านบนตามปกติ กด "บันทึกผลอีกครั้ง" เพื่อลองใหม่`;
+  }
+}
+function retrySave(){
+  const showRes = computeShowScore();
+  const learnScore = computeLearnScore();
+  const applyScore = computeApplyScore();
+  const reflectScore = computeReflectScore();
+  const total = computeTotal(showRes.score, learnScore, applyScore, reflectScore);
+  const q = qualityInfo(total);
+  submitToSheet(showRes, learnScore, applyScore, reflectScore, total, q);
+}
+
+function restartAll(){
+  LEARN_ORDER.concat(APPLY_ORDER).forEach(k=>appState.taskProgress[k]=null);
+  appState.show = {answers:{}, likert:{}};
+  appState.reflect = {likert:{}, text1:'', text2:''};
+  appState.currentLearnTask='learn1';
+  appState.currentApplyTask='apply1';
+  appState.student = {name:'', grade:''};
+  appState.timeLeft = 30*60;
+  runtime.energyBudget = null;
+  runtime.undo = [];
+  const tb = document.getElementById('timerBox');
+  tb.textContent = fmtTime(appState.timeLeft);
+  tb.classList.remove('low');
+  goto('intro');
+}
+
+/* ====================== INIT ====================== */
+document.getElementById('timerBox').textContent = fmtTime(appState.timeLeft);
+goto('intro');
+</script>
+</body>
+</html>
