@@ -86,6 +86,8 @@
   .step.active .num{background:var(--depth); color:var(--seafoam);}
   .step.done{color:#FBEFE6;}
   .step.done .num{background:var(--seafoam-dark); color:#fff;}
+  .timer-wrap{display:flex; align-items:center; gap:8px;}
+  .timer-label{font-size:12.5px; font-weight:600; color:#F0D3B8; white-space:nowrap;}
   .timer-box{
     font-family:'Bai Jamjuree',sans-serif; font-weight:600; font-size:14.5px;
     background:rgba(255,255,255,0.08); padding:7px 13px; border-radius:10px;
@@ -361,7 +363,10 @@
       <div class="who-badge hidden" id="whoBadge"></div>
       <div class="stepper" id="stepper"></div>
     </div>
-    <div class="timer-box" id="timerBox">30:00</div>
+    <div class="timer-wrap">
+      <span class="timer-label">เวลาที่เหลือ</span>
+      <div class="timer-box" id="timerBox">30:00</div>
+    </div>
   </div>
 </header>
 <svg class="wave-divider" viewBox="0 0 1200 24" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="display:block;width:100%;height:34px;margin-top:-2px;">
@@ -610,9 +615,10 @@ function renderIntro(main){
   main.innerHTML = `
   <div class="intro-hero">
     <div class="hero-copy">
-      <div class="eyebrow-phase" style="color:#FBD48A;">${iconTag('apply')}แบบฝึกเทียบเคียง PISA 2025 · LDW · ระดับมัธยมศึกษาตอนปลาย</div>
+      <div class="eyebrow-phase" style="color:#FBD48A;">${iconTag('apply')}แบบฝึกเทียบเคียง PISA 2025 · LDW</div>
       <h1>ภารกิจหุ่นยนต์ส่งอาหารตามโต๊ะ: สั่งงานหุ่นยนต์เสิร์ฟด้วยโปรแกรมของคุณเอง</h1>
-      <p>  ในธุรกิจร้านอาหาร มีการทำหุ่นยนต์มาใช้งาน ในด้านต่างๆ เช่น หุ่นยนต์เตรียมอาหาร  หุ่นยนต์ปรุงอาหาร  หุ่นยนต์บริการ  เพื่อสร้างความมั่นใจ ให้กับลูกค้า   คุณจะรับบทผู้เขียนโปรแกรมควบคุมหุ่นยนต์ส่งอาหารในร้านอาหาร ซึ่งหุ่นยนต์ส่งอาหารนี้  ควบคุมการทำงานด้วยการเขียนโปรแกรม  ด้วยคำสั่งบล้อค  ซึ่งสามารถใช้งาน ตัวแก้ไขบล็อกคำสั่งแบบลาก-วางสไตล์คล้ายกับโปรแกรม Scratch —  โดยมีคำสั่ง ลำดับคำสั่ง การเลี้ยว การทำซ้ำ เงื่อนไข if/else จากเซนเซอร์ และการบริหารพลังงานแบตเตอรี่จำกัด</p>
+      <p>ในธุรกิจร้านอาหาร มีการทำหุ่นยนต์มาใช้งาน ในด้านต่างๆ เช่น หุ่นยนต์เตรียมอาหาร หุ่นยนต์ปรุงอาหาร หุ่นยนต์บริการ เพื่อสร้างความมั่นใจ ให้กับลูกค้า คุณจะรับบทผู้เขียนโปรแกรมควบคุมหุ่นยนต์ส่งอาหารในร้านอาหาร ซึ่งหุ่นยนต์ส่งอาหารนี้ ควบคุมการทำงานด้วยการเขียนโปรแกรม ด้วยคำสั่งบล้อค ซึ่งสามารถใช้งาน ตัวแก้ไขบล็อกคำสั่งแบบลาก-วางสไตล์คล้ายกับโปรแกรม Scratch — โดยมีคำสั่ง ลำดับคำสั่ง การเลี้ยว การทำซ้ำ เงื่อนไข if/else จากเซนเซอร์ และการบริหารพลังงานแบตเตอรี่จำกัด</p>
+      <p>ภารกิจจำลองโครงสร้างแบบทดสอบนี้ มี 4 ขั้นตอน คือ show - learn - apply - reflect เวลา 30 นาที</p>
       <div class="intro-badges">
         <div class="badge">1 · แสดงสิ่งที่รู้ (Show) — 6 ข้อ</div>
         <div class="badge">2 · เรียนรู้ (Learn) — 6 ภาระงาน</div>
